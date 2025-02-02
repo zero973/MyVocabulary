@@ -18,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Queries\" />
-    <Folder Include="Commands\" />
+    <Folder Include="Commands\UserAnswers\" />
+    <Folder Include="Commands\WordUsages\" />
+    <Folder Include="Commands\Words\" />
   </ItemGroup>
 
 </Project>

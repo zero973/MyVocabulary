@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:MyVocabulary.UI.Controls"
+             xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
+             xmlns:pageModels="clr-namespace:MyVocabulary.UI.PageModels"
+             xmlns:models="clr-namespace:MyVocabulary.Application.Models;assembly=MyVocabulary.Application"
+             x:Class="MyVocabulary.UI.Pages.MainPage"
+             x:DataType="pageModels:MainPageModel"
+             Title="Topics">
+
+    <!-- Doesn't work and I idk why :(
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior
+            EventName="NavigatedTo"
+            Command="{Binding NavigatedToCommand}" />
+        <toolkit:EventToCommandBehavior
+            EventName="NavigatedFrom"
+            Command="{Binding NavigatedFromCommand}" />
+        <toolkit:EventToCommandBehavior
+            EventName="Appearing"
+            Command="{Binding AppearingCommand}" />
+    </ContentPage.Behaviors>-->
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid>
+        <StackLayout Orientation="Vertical" Margin="5">
+
+            <!--Search panel-->
+            <Border>
+                <Grid HorizontalOptions="Fill" RowDefinitions="*, *" ColumnDefinitions="3*, 0.5*, 3*, 1.5*">
+                    <Entry Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4"
+                           Text="{Binding SearchText}" 
+                           Placeholder="{x:Static localization:AppResources.SearchTextPlaceholder}" />
+                    <Picker Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguageFrom}" />
+                    <Image Grid.Row="1" Grid.Column="1" Source="{StaticResource RightArrow}" />
+                    <Picker Grid.Row="1" Grid.Column="2" ItemsSource="{Binding Languages}" SelectedItem="{Binding SelectedLanguageTo}" />
+                    <Button Grid.Row="1" Grid.Column="3" ImageSource="{StaticResource IconSearch}" Command="{Binding SearchCommand}" Margin="5" />
+                </Grid>
+            </Border>
+
+            <Label HorizontalOptions="Center"
+                   Style="{StaticResource Title3}" 
+                   IsVisible="{Binding HasTopics, Converter={StaticResource InvertedBoolConverter}}" 
+                   Text="No topics ..."
+                   Margin="0,50,0,0"/>
+
+            <!--Content panel-->
+            <CollectionView HorizontalOptions="Fill" ItemsSource="{Binding Topics}" IsVisible="{Binding HasTopics}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:TopicDTO">
+                        <Grid Padding="0,5">
+                            <Border>
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, Path=TapCommand}" 
+                                                  CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                                <Grid RowDefinitions="*, 5*" ColumnDefinitions="*, 6*">
+                                    <controls:EImage Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
+                                             Source="{Binding PhotoUrl}" 
+                                             ErrorPlaceholder="{StaticResource ImageError}" />
+                                    <Label Grid.Row="0" Grid.Column="1" Text="{Binding Header}" Style="{StaticResource Title3}" Margin="10,0,0,0"/>
+                                    <!--Label Grid.Row="0" Grid.Column="2" (desribes topic languages....)-->
+                                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding Description}" Style="{StaticResource Body2}" Margin="10,0,0,0"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button HorizontalOptions="Center"
+                Text="{x:Static localization:AppResources.LoadMore}" 
+                IsVisible="{Binding ShowLoadMoreButton}" 
+                Command="{Binding LoadMoreCommand}" />
+
+        </StackLayout>
+
+        <Button
+            ImageSource="{StaticResource IconAdd}"
+            BackgroundColor="{StaticResource Primary}" 
+            CornerRadius="30" 
+            HeightRequest="60" 
+            WidthRequest="60" 
+            VerticalOptions="End" 
+            HorizontalOptions="End"
+            Margin="30"
+            Command="{Binding CreateTopicCommand}"/>
+
+        <Grid IsVisible="{Binding IsLoading}" 
+              BackgroundColor="#80000000" 
+              VerticalOptions="FillAndExpand" 
+              HorizontalOptions="FillAndExpand">
+
+            <ActivityIndicator IsRunning="{Binding IsLoading}"
+                               Color="White"
+                               HorizontalOptions="Center"
+                               VerticalOptions="Center" />
+
+            <Label Text="Loading..."
+                   TextColor="White"
+                   FontSize="Large"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Margin="0,100,0,0" />
+        </Grid>
+
+    </Grid>
+    
+</ContentPage>

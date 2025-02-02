@@ -9,7 +9,7 @@ public abstract class BaseEntity
     /// <summary>
     /// Entity ID
     /// </summary>
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; protected set; } = Guid.NewGuid();
 
     public override string ToString()
     {

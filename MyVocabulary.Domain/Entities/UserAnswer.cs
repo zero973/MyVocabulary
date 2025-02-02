@@ -3,32 +3,37 @@
 namespace MyVocabulary.Domain.Entities;
 
 /// <summary>
-/// User answer (right/wrong) in <see cref="WordCase"/>
+/// Represents a user's answer (correct or incorrect) for a specific <see cref="WordUsage"/>.
 /// </summary>
 public class UserAnswer : BaseEntity, IAggregateRoot
 {
 
     /// <summary>
-    /// Linked word case
+    /// The identifier of the associated word usage case.
     /// </summary>
-    public Guid WordCaseId { get; private set; }
+    public Guid WordUsageId { get; private set; }
 
     /// <summary>
-    /// Is answer correct
+    /// Indicates whether the user's answer was correct.
     /// </summary>
     public bool IsRight { get; private set; }
 
     /// <summary>
-    /// Answer date
+    /// The date and time when the answer was recorded.
     /// </summary>
     public DateTimeOffset Date { get; private set; } = DateTimeOffset.Now;
 
 #pragma warning disable CS8618 // Required by Entity Framework
     private UserAnswer() { }
 
-    public UserAnswer(Guid wordCaseId, bool isRight)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserAnswer"/> class.
+    /// </summary>
+    /// <param name="wordUsageId">The identifier of the associated word usage case.</param>
+    /// <param name="isRight">A value indicating whether the user's answer was correct.</param>
+    public UserAnswer(Guid wordUsageId, bool isRight)
     {
-        WordCaseId = wordCaseId;
+        WordUsageId = wordUsageId;
         IsRight = isRight;
     }
 
