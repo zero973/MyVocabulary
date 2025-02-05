@@ -25,5 +25,13 @@ public class WordUsageDtoValidator : AbstractValidator<WordUsageDTO>
             .WithMessage("Translated sentence must not exceed 200 characters");
 
         RuleFor(x => x.PhotoUrl).SetValidator(new PhotoUrlValidator());
+
+        RuleFor(x => x.NativeWord.Language.Value)
+            .Equal(x => x.Topic.CultureFrom.Value)
+            .WithMessage("Native word must have same culture with topic");
+
+        RuleFor(x => x.TranslationWord.Language.Value)
+            .Equal(x => x.Topic.CultureTo.Value)
+            .WithMessage("Word translation must have same culture with topic");
     }
 }

@@ -16,6 +16,7 @@ public class AppDbContext : DbContext
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
+        SQLitePCL.Batteries_V2.Init();
         // dotnet tool update --global dotnet-ef
         // dotnet ef migrations add init -p MyVocabulary.Infrastructure -s MyVocabulary.UI
         // dotnet ef migrations add init -c AppDbContext --output-dir Migrations

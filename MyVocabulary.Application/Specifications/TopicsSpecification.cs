@@ -24,16 +24,20 @@ public class TopicsSpecification : Specification<Topic>
         Query.Where(x => x.CultureFrom == cultureFrom.Value);
     }
 
-    public TopicsSpecification(uint skip, uint take, Language cultureFrom, Language cultureTo)
+    public TopicsSpecification(uint skip, uint take, Language cultureFrom, Language cultureTo, bool oneWaySearch = true)
         : this(skip, take)
     {
-        Query.Where(x => x.CultureFrom == cultureFrom.Value
-            && x.CultureTo == cultureTo.Value);
+        if (oneWaySearch)
+            Query.Where(x => x.CultureFrom == cultureFrom.Value
+                && x.CultureTo == cultureTo.Value);
+        else
+            Query.Where(x => (x.CultureFrom == cultureFrom.Value || x.CultureFrom == cultureTo.Value)
+                && (x.CultureTo == cultureTo.Value || x.CultureTo == cultureFrom.Value));
     }
 
     public TopicsSpecification(uint skip, uint take, string header, 
-        Language cultureFrom, Language cultureTo)
-        : this(skip, take, cultureFrom, cultureTo)
+        Language cultureFrom, Language cultureTo, bool oneWaySearch = true)
+        : this(skip, take, cultureFrom, cultureTo, oneWaySearch)
     {
         Query.Where(x => x.Header.ToLower().Contains(header.ToLower()));
     }

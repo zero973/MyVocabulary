@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MediatR;
-using MyVocabulary.Application.Commands.Database;
 using MyVocabulary.Application.Models;
 using MyVocabulary.Application.Queries.Languages;
 using MyVocabulary.Application.Queries.Topics;
@@ -18,8 +17,6 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     private const int TakeElementsCount = 25;
 
     private uint PageNumber = 0;
-
-    private bool _isNavigatedTo;
 
     /// <summary>
     /// Languages dictionary
@@ -49,9 +46,16 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     private bool _showLoadMoreButton = true;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ArrowIcon))]
+    private bool _isOneWaySearch = true;
+
+    [ObservableProperty]
     private bool _isLoading = true;
 
     public bool HasTopics => Topics?.Any() ?? false;
+
+    public ImageSource ArrowIcon => (ImageSource)Microsoft.Maui.Controls.Application.Current!.Resources
+        [IsOneWaySearch ? "RightArrow" : "BidirectionalArrow"];
 
     private async Task LoadData()
     {
@@ -70,17 +74,12 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     }
 
     [RelayCommand]
-    private void NavigatedTo() => _isNavigatedTo = true;
-
-    [RelayCommand]
-    private void NavigatedFrom() => _isNavigatedTo = false;
-
-    [RelayCommand]
     private async Task Appearing()
     {
         IsLoading = true;
 
-        await _sender.Send(new MigrateDatabase());
+        await _sender.Send(new Application.Commands.App.OnAppStartedRequest());
+
         await LoadData();
 
         IsLoading = false;
@@ -109,7 +108,8 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
                 TakeElementsCount, 
                 SearchText,
                 _languagesDict[SelectedLanguageFrom], 
-                _languagesDict[SelectedLanguageTo])));
+                _languagesDict[SelectedLanguageTo], 
+                IsOneWaySearch)));
         Topics = new ObservableCollection<TopicDTO>(topics);
 
         ShowLoadMoreButton = topics.Value.Any();
@@ -125,12 +125,16 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
                 TakeElementsCount, 
                 SearchText,
                 _languagesDict[SelectedLanguageFrom], 
-                _languagesDict[SelectedLanguageTo])));
+                _languagesDict[SelectedLanguageTo],
+                IsOneWaySearch)));
 
         ShowLoadMoreButton = topics.Value.Any();
 
         foreach (var topic in topics.Value)
             Topics.Add(topic);
     }
+
+    [RelayCommand]
+    private void ToggleSearchDirection() => IsOneWaySearch = !IsOneWaySearch;
 
 }

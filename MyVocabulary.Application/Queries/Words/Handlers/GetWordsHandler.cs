@@ -1,11 +1,12 @@
 ﻿using Ardalis.Result;
 using MediatR;
+using MyVocabulary.Application.Models;
 using MyVocabulary.Domain.Entities;
 using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Queries.Words.Handlers;
 
-public class GetWordsHandler : IRequestHandler<GetWordsRequest, Result<List<Word>>>
+internal class GetWordsHandler : IRequestHandler<GetWordsRequest, Result<List<WordDTO>>>
 {
 
     private readonly IRepository<Word> _wordsRepository;
@@ -15,9 +16,10 @@ public class GetWordsHandler : IRequestHandler<GetWordsRequest, Result<List<Word
         _wordsRepository = wordsRepository;
     }
 
-    public async Task<Result<List<Word>>> Handle(GetWordsRequest request, CancellationToken cancellationToken)
+    public async Task<Result<List<WordDTO>>> Handle(GetWordsRequest request, CancellationToken cancellationToken)
     {
-        return await _wordsRepository.ListAsync(request.Specification);
+        var words = await _wordsRepository.ListAsync(request.Specification);
+        return words.Select(x => new WordDTO(x.Id, x.Value, new Language(x.Culture))).ToList();
     }
 
 }

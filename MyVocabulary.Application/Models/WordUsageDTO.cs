@@ -1,6 +1,4 @@
-﻿using MyVocabulary.Domain.Entities;
-
-namespace MyVocabulary.Application.Models;
+﻿namespace MyVocabulary.Application.Models;
 
 public class WordUsageDTO
 {
@@ -9,9 +7,9 @@ public class WordUsageDTO
 
     public TopicDTO Topic { get; set; }
 
-    public Word NativeWord { get; set; }
+    public WordDTO NativeWord { get; set; }
 
-    public Word TranslationWord { get; set; }
+    public WordDTO TranslationWord { get; set; }
 
     public string NativeSentence { get; set; }
 
@@ -19,8 +17,8 @@ public class WordUsageDTO
 
     public string? PhotoUrl { get; set; }
 
-    public WordUsageDTO(Guid id, TopicDTO topic, Word nativeWord, 
-        Word translationWord, string nativeSentence, 
+    public WordUsageDTO(Guid id, TopicDTO topic, WordDTO nativeWord,
+        WordDTO translationWord, string nativeSentence, 
         string translatedSentence, string? photoUrl)
     {
         Id = id;

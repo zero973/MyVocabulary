@@ -31,8 +31,22 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
 
         if (failures.Any())
         {
-            var errorMessage = string.Join("; ", failures.Select(f => f.ErrorMessage));
-            return (TResponse)(object)Result.Error(errorMessage);
+            var errorList = new ErrorList(failures.Select(f => f.ErrorMessage));
+
+            if (typeof(TResponse).IsGenericType && typeof(TResponse).GetGenericTypeDefinition() == typeof(Result<>))
+            {
+                var genericType = typeof(TResponse).GetGenericArguments()[0];
+
+                var genericErrorMethod = typeof(Result<>)
+                    .MakeGenericType(genericType)
+                    .GetMethod(nameof(Result<object>.Error), [typeof(ErrorList)]);
+
+                var genericErrorResult = genericErrorMethod?.Invoke(null, [errorList]);
+
+                return (TResponse)genericErrorResult!;
+            }
+
+            return (TResponse)(object)Result.Error(errorList);
         }
 
         return await next();

@@ -6,7 +6,7 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Queries.Topics.Handlers;
 
-public class GetTopicsHandler : IRequestHandler<GetTopicsRequest, Result<List<TopicDTO>>>
+internal class GetTopicsHandler : IRequestHandler<GetTopicsRequest, Result<List<TopicDTO>>>
 {
 
     private readonly IRepository<Topic> _topicsRepository;

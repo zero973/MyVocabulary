@@ -8,18 +8,19 @@ using MediatR;
 using MyVocabulary.Application.Commands.Topics;
 using MyVocabulary.Application.Models;
 using MyVocabulary.Application.Queries.Languages;
+using MyVocabulary.Application.Queries.Topics;
 using MyVocabulary.UI.Enums;
 using MyVocabulary.UI.Extensions;
+using MyVocabulary.UI.Localization;
 using MyVocabulary.UI.NavigationParameters;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQueryAttributable
+public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, IQueryAttributable
 {
 
+    // todo replace it somewhere
     private const string NoImageUrl = "https://sun9-58.userapi.com/impg/T2LyUzjz8C3DKtVoI7p6fo2edXNP04AOcYsDZQ/2Pj8k46yrqk.jpg?size=383x341&quality=95&sign=3f0a715c29c549d26b93b073a344df45";
-
-    private readonly ISender _sender = sender;
 
     /// <summary>
     /// Languages dictionary
@@ -47,23 +48,12 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
 
     public bool HasWordUsages => (Topic?.WordUsages?.Count ?? 0) > 0;
 
-    private async Task LoadData()
-    {
-        var languages = await _sender.Send(new GetLanguagesRequest());
-        _languagesDict = languages.ToDictionary(x => x.Name, x => x);
-        Languages = new ObservableCollection<string>(_languagesDict.Keys);
-
-        SelectedLanguageFrom = Topic.CultureFrom.Name;
-        SelectedLanguageTo = Topic.CultureTo.Name;
-    }
-
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         var parameters = PageNavigationParameter<TopicDTO>.From(query);
         if (parameters.Mode == NavigationModes.Exists)
         {
             Topic = parameters.Value!;
-            PictureUrl = Topic.PhotoUrl;
         }
         else
         {
@@ -71,6 +61,7 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
             Topic = new TopicDTO(Guid.NewGuid(), Language.Default(), Language.Default(), 
                 "", "", NoImageUrl, new List<WordUsageDTO>());
         }
+        PictureUrl = Topic.PhotoUrl;
     }
 
     [RelayCommand]
@@ -80,17 +71,24 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
     }
 
     [RelayCommand]
+    private async Task NavigatedTo()
+    {
+        if (!IsCreateMode)
+            Topic = await _sender.Send(new GetTopicRequest(Topic.Id));
+    }
+
+    [RelayCommand]
     private async Task ChangeImage()
     {
-        var imageUrl = await Shell.Current.ShowPopupAsync(new Controls.ChooseImagePopup()) as string;
+        var imageUrl = await Shell.Current.ShowPopupAsync(new Controls.ChooseImagePopup(PictureUrl)) as string;
         PictureUrl = imageUrl;
     }
 
     [RelayCommand]
     private async Task SaveTopic()
     {
-        var ensure = await Shell.Current.DisplayAlert("Attention",
-            "Are you sure that you want to save this topic ?", "Yes", "No");
+        var ensure = await Shell.Current.DisplayAlert(AppResources.Attention,
+            "Are you sure that you want to save this topic ?", AppResources.Yes, AppResources.No);
 
         if (!ensure)
             return;
@@ -106,11 +104,14 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
             if (!result.IsSuccess)
             {
                 var message = Environment.NewLine + string.Join(";" + Environment.NewLine, result.Errors);
-                await Shell.Current.DisplayAlert("Error", $"You can't create topic: {message}", "Ok");
+                await Shell.Current.DisplayAlert(AppResources.Error, $"You can't create topic: {message}", AppResources.Ok);
                 return;
             }
 
             await Toast.Make("Topic successfully created", ToastDuration.Short).Show();
+
+            Topic.Id = result.Value.Id;
+            IsCreateMode = false;
         }
         else
         {
@@ -119,7 +120,7 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
             if (!result.IsSuccess)
             {
                 var message = Environment.NewLine + string.Join(";" + Environment.NewLine, result.Errors);
-                await Shell.Current.DisplayAlert("Error", $"You can't edit topic: {message}", "Ok");
+                await Shell.Current.DisplayAlert(AppResources.Error, $"You can't edit topic: {message}", AppResources.Ok);
                 return;
             }
 
@@ -130,8 +131,8 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
     [RelayCommand]
     private async Task DeleteTopic()
     {
-        var ensure = await Shell.Current.DisplayAlert("Attention", 
-            "Are you sure that you want to delete this topic ?", "Yes", "No");
+        var ensure = await Shell.Current.DisplayAlert(AppResources.Attention, 
+            "Are you sure that you want to delete this topic ?", AppResources.Yes, AppResources.No);
 
         if (!ensure)
             return;
@@ -148,19 +149,46 @@ public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQ
     }
 
     [RelayCommand]
-    private async Task StartLeson()
+    private async Task StartLesson()
     {
+        if (Topic.WordUsages.Count < 0)
+        {
+            await Toast.Make("We can't start lesson - no word usages in topic", ToastDuration.Long).Show();
+            return;
+        }
 
+        await Toast.Make("Coming soon !", ToastDuration.Short).Show();
     }
 
     [RelayCommand]
     private async Task CreateWordUsage()
-        => await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
-            new PageNavigationParameter<WordUsageDTO>(NavigationModes.New));
+    {
+        if (IsCreateMode)
+        {
+            await Shell.Current.DisplayAlert(AppResources.Error,
+                "Before you create a word usage, you must save the current topic", AppResources.Ok);
+            return;
+        }
+
+        await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
+            new WordUsageNavigationParameter(NavigationModes.New, Topic));
+    }
 
     [RelayCommand]
     private async Task Tap(WordUsageDTO wordUsage)
-        => await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
-            new PageNavigationParameter<WordUsageDTO>(NavigationModes.Exists, wordUsage));
+    {
+        await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
+            new WordUsageNavigationParameter(NavigationModes.Exists, Topic, wordUsage));
+    }
+
+    private async Task LoadData()
+    {
+        var languages = await _sender.Send(new GetLanguagesRequest());
+        _languagesDict = languages.ToDictionary(x => x.Name, x => x);
+        Languages = new ObservableCollection<string>(_languagesDict.Keys);
+
+        SelectedLanguageFrom = Topic.CultureFrom.Name;
+        SelectedLanguageTo = Topic.CultureTo.Name;
+    }
 
 }

@@ -4,7 +4,7 @@ using MyVocabulary.Application.Models;
 
 namespace MyVocabulary.Application.Queries.Languages.Handlers;
 
-public class GetLanguagesHandler : IRequestHandler<GetLanguagesRequest, Language[]>
+internal class GetLanguagesHandler : IRequestHandler<GetLanguagesRequest, Language[]>
 {
     public async Task<Language[]> Handle(GetLanguagesRequest request, CancellationToken cancellationToken)
     {

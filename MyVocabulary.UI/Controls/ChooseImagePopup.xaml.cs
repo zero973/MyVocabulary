@@ -9,9 +9,10 @@ public partial class ChooseImagePopup : Popup
 
     public string ImageUrl { get; private set; } = string.Empty;
 
-    public ChooseImagePopup()
+    public ChooseImagePopup(string? curImage)
 	{
 		InitializeComponent();
+        ImageUrl = curImage ?? string.Empty;
     }
 
     private async void ConfirmPopup(object sender, EventArgs e)
@@ -34,6 +35,6 @@ public partial class ChooseImagePopup : Popup
         Close(ImageUrl);
     }
 
-    private void ClosePopup(object sender, EventArgs e) => Close();
+    private void ClosePopup(object sender, EventArgs e) => Close(ImageUrl);
 
 }

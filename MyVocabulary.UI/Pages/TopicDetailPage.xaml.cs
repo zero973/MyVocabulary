@@ -16,4 +16,7 @@ public partial class TopicDetailPage : ContentPage
     protected async override void OnAppearing()
         => await _model.AppearingCommand.ExecuteAsync(null);
 
+    protected async override void OnNavigatedTo(NavigatedToEventArgs args)
+        => await _model.NavigatedToCommand.ExecuteAsync(args);
+
 }

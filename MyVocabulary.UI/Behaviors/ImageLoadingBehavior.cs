@@ -30,7 +30,10 @@ public class ImageLoadingBehavior : Behavior<Image>
         var uriImage = image!.Source as UriImageSource;
 
         if (uriImage == null || !uriImage!.Uri.IsAbsoluteUri)
+        {
+            image.Source = ErrorPlaceholder;
             return;
+        }
 
         var res = await image!.Source.GetPlatformImageAsync(image.Handler!.MauiContext!);
         if (res == null)

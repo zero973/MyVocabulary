@@ -8,24 +8,20 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Queries.Topics.Handlers;
 
-public class GetTopicHandler : IRequestHandler<GetTopicRequest, Result<TopicDTO>>
+internal class GetTopicHandler : IRequestHandler<GetTopicRequest, Result<TopicDTO>>
 {
 
     private readonly IRepository<Topic> _topicsRepository;
     private readonly ISender _sender;
-    private readonly IRepository<WordUsage> _wordUsagesRepository;
 
-    public GetTopicHandler(IRepository<Topic> topicsRepository, ISender sender, IRepository<WordUsage> wordUsagesRepository)
+    public GetTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
     {
         _topicsRepository = topicsRepository;
         _sender = sender;
-        _wordUsagesRepository = wordUsagesRepository;
     }
 
     public async Task<Result<TopicDTO>> Handle(GetTopicRequest request, CancellationToken cancellationToken)
     {
-        var a = await _wordUsagesRepository.ListAsync();
-
         var topic = (await _topicsRepository.FirstOrDefaultAsync(
             new TopicsSpecification(request.Id, true)))!;
 

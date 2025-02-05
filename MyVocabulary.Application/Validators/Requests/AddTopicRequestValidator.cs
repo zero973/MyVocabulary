@@ -8,7 +8,6 @@ public class AddTopicRequestValidator : AbstractValidator<AddTopicRequest>
 {
     public AddTopicRequestValidator()
     {
-        RuleFor(x => x.Entity.Header).MaximumLength(0).WithMessage("qweqweqe");
         RuleFor(x => x.Entity).SetValidator(new TopicDtoValidator());
     }
 }

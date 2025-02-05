@@ -111,6 +111,12 @@
         Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
         Size="{StaticResource size240}" />
 
+    <FontImageSource x:Key="BidirectionalArrow"
+        Glyph="{x:Static f:FluentUI.arrow_bidirectional_left_right_28_regular}"
+        FontFamily="{x:Static f:FluentUI.FontFamily}"
+        Color="{AppThemeBinding Light={StaticResource DarkOnLightBackground}, Dark={StaticResource LightOnDarkBackground}}"
+        Size="{StaticResource size240}" />
+
     <FontImageSource x:Key="ImageError"
         Glyph="{x:Static f:FluentUI.globe_error_24_regular}"
         FontFamily="{x:Static f:FluentUI.FontFamily}"

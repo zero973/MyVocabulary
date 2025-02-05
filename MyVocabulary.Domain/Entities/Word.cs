@@ -28,7 +28,7 @@ public class Word : BaseEntity, IAggregateRoot
     /// <param name="culture">The culture or language of the word.</param>
     public Word(string value, string culture)
     {
-        Value = value;
+        Value = value.ToLower();
         Culture = culture;
     }
 
@@ -39,7 +39,7 @@ public class Word : BaseEntity, IAggregateRoot
     /// <param name="culture">The updated culture or language of the word.</param>
     public void Edit(string value, string culture)
     {
-        Value = value;
+        Value = value.ToLower();
         Culture = culture;
     }
 

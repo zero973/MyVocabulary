@@ -13,6 +13,10 @@ public class TopicDTO
 
     public string Description { get; set; }
 
+    public string ShortDescription => Description.Length > 25
+        ? $"{Description.Substring(0, 25)}..."
+        : Description;
+
     public string? PhotoUrl { get; set; }
 
     public List<WordUsageDTO> WordUsages { get; set; } = new List<WordUsageDTO>();

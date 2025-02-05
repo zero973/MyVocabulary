@@ -18,9 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Commands\UserAnswers\" />
-    <Folder Include="Commands\WordUsages\" />
-    <Folder Include="Commands\Words\" />
+    <Folder Include="Commands\UserAnswers\Handlers\" />
   </ItemGroup>
 
 </Project>

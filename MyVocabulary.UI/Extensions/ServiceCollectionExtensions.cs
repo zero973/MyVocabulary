@@ -6,8 +6,8 @@ public static class ServiceCollectionExtensions
 {
     public static void RegisterPagesAndModels(this IServiceCollection services)
     {
-        services.AddSingleton<Pages.MainPage>();
-        services.AddSingleton<PageModels.MainPageModel>();
+        services.TryAddTransient<Pages.MainPage>();
+        services.TryAddTransient<PageModels.MainPageModel>();
         services.TryAddTransient<Pages.SettingsPage>();
         services.TryAddTransient<PageModels.SettingsPageModel>();
         services.TryAddTransient<Pages.TopicDetailPage>();
@@ -19,6 +19,6 @@ public static class ServiceCollectionExtensions
         services.TryAddTransient<Pages.WordsPage>();
         services.TryAddTransient<PageModels.WordsPageModel>();
         services.TryAddTransient<Pages.WordUsageDetailPage>();
-        services.TryAddTransient<PageModels.WordUsageDetailPage>();
+        services.TryAddTransient<PageModels.WordUsageDetailPageModel>();
     }
 }

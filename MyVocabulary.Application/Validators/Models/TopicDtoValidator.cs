@@ -24,10 +24,6 @@ public class TopicDtoValidator : AbstractValidator<TopicDTO>
             .MaximumLength(300)
             .WithMessage("Topic description maximum length must be 300");
 
-        RuleFor(x => x.WordUsages.Count)
-            .GreaterThan(0)
-            .WithMessage("Word usages count must contain elements");
-
         RuleFor(x => x.PhotoUrl).SetValidator(new PhotoUrlValidator());
 
         RuleForEach(x => x.WordUsages)

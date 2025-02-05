@@ -8,7 +8,7 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Queries.UserAnswers.Handlers;
 
-public class GetUserAnswersHandler : IRequestHandler<GetUserAnswersRequest, Result<List<UserAnswerDTO>>>
+internal class GetUserAnswersHandler : IRequestHandler<GetUserAnswersRequest, Result<List<UserAnswerDTO>>>
 {
 
     private readonly IRepository<UserAnswer> _userAnswersRepository;

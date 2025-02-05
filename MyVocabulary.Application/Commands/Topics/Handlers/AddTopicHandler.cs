@@ -7,15 +7,15 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.Topics.Handlers;
 
-public class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDTO>>
+internal class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDTO>>
 {
 
-    private readonly IRepository<Topic> _topicRepository;
+    private readonly IRepository<Topic> _topicsRepository;
     private readonly ISender _sender;
 
-    public AddTopicHandler(IRepository<Topic> topicRepository, ISender sender)
+    public AddTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
     {
-        _topicRepository = topicRepository;
+        _topicsRepository = topicsRepository;
         _sender = sender;
     }
 
@@ -35,7 +35,7 @@ public class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDTO>
             request.Entity.PhotoUrl,
             wordUsages);
 
-        var result = await _topicRepository.AddAsync(topic);
+        var result = await _topicsRepository.AddAsync(topic);
         var topicDto = await _sender.Send(new GetTopicRequest(result.Id));
 
         // todo check need I add wordUsages manually like this

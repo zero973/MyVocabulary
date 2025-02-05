@@ -9,7 +9,7 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Queries.WordUsages.Handlers;
 
-public class GetWordUsagesHandler : IRequestHandler<GetWordUsagesRequest, Result<List<WordUsageDTO>>>
+internal class GetWordUsagesHandler : IRequestHandler<GetWordUsagesRequest, Result<List<WordUsageDTO>>>
 {
 
     private readonly IRepository<WordUsage> _wordUsagesRepository;
