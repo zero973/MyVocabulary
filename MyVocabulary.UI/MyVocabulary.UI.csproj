@@ -82,6 +82,15 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>AppResources.resx</DependentUpon>
 	  </Compile>
+	  <Compile Update="Pages\PhraseDetailPage.xaml.cs">
+	    <DependentUpon>PhraseDetailPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\PhrasesPage.xaml.cs">
+	    <DependentUpon>PhrasesPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\PhraseUsageDetailPage.xaml.cs">
+	    <DependentUpon>PhraseUsageDetailPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>

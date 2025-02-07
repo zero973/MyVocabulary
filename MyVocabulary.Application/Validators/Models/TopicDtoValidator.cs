@@ -26,7 +26,7 @@ public class TopicDtoValidator : AbstractValidator<TopicDTO>
 
         RuleFor(x => x.PhotoUrl).SetValidator(new PhotoUrlValidator());
 
-        RuleForEach(x => x.WordUsages)
-            .SetValidator(new WordUsageDtoValidator());
+        RuleForEach(x => x.PhraseUsages)
+            .SetValidator(new PhraseUsageDtoValidator());
     }
 }

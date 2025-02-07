@@ -8,7 +8,7 @@
              xmlns:models="clr-namespace:MyVocabulary.Application.Models;assembly=MyVocabulary.Application"
              x:Class="MyVocabulary.UI.Pages.MainPage"
              x:DataType="pageModels:MainPageModel"
-             Title="Topics">
+             Title="{x:Static localization:AppResources.Topics}">
 
     <!-- Doesn't work and I idk why :(
     <ContentPage.Behaviors>
@@ -110,6 +110,7 @@
             Margin="30"
             Command="{Binding CreateTopicCommand}"/>
 
+        <!--Loading panel-->
         <Grid IsVisible="{Binding IsLoading}" 
               BackgroundColor="#80000000" 
               VerticalOptions="FillAndExpand" 
@@ -120,7 +121,7 @@
                                HorizontalOptions="Center"
                                VerticalOptions="Center" />
 
-            <Label Text="Loading..."
+            <Label Text="{x:Static localization:AppResources.Loading}"
                    TextColor="White"
                    FontSize="Large"
                    HorizontalOptions="Center"

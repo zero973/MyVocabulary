@@ -3,15 +3,15 @@
 namespace MyVocabulary.Domain.Entities;
 
 /// <summary>
-/// Represents a user's answer (correct or incorrect) for a specific <see cref="WordUsage"/>.
+/// Represents a user's answer (correct or incorrect) for a specific <see cref="PhraseUsage"/>.
 /// </summary>
 public class UserAnswer : BaseEntity, IAggregateRoot
 {
 
     /// <summary>
-    /// The identifier of the associated word usage case.
+    /// The identifier of the associated phrase usage case.
     /// </summary>
-    public Guid WordUsageId { get; private set; }
+    public Guid PhraseUsageId { get; private set; }
 
     /// <summary>
     /// Indicates whether the user's answer was correct.
@@ -29,11 +29,11 @@ public class UserAnswer : BaseEntity, IAggregateRoot
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAnswer"/> class.
     /// </summary>
-    /// <param name="wordUsageId">The identifier of the associated word usage case.</param>
+    /// <param name="phraseUsageId">The identifier of the associated phrase usage case.</param>
     /// <param name="isRight">A value indicating whether the user's answer was correct.</param>
-    public UserAnswer(Guid wordUsageId, bool isRight)
+    public UserAnswer(Guid phraseUsageId, bool isRight)
     {
-        WordUsageId = wordUsageId;
+        PhraseUsageId = phraseUsageId;
         IsRight = isRight;
     }
 

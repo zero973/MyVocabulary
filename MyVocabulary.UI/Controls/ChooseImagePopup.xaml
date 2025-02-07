@@ -2,11 +2,12 @@
 <toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
                x:Class="MyVocabulary.UI.Controls.ChooseImagePopup"
                Size="300,200">
     <VerticalStackLayout Padding="20" Spacing="10">
-        
-        <Label Text="Enter image URL:" FontSize="18" />
+
+        <Label Text="{x:Static localization:AppResources.EnterImageURL}" FontSize="18" />
 
         <Entry x:Name="UrlEntry" Placeholder="https://example.com/image.jpg" />
 

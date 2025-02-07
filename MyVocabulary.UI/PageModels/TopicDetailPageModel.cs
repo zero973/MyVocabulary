@@ -46,7 +46,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
     [ObservableProperty]
     public bool _isCreateMode = false;
 
-    public bool HasWordUsages => (Topic?.WordUsages?.Count ?? 0) > 0;
+    public bool HasWordUsages => (Topic?.PhraseUsages?.Count ?? 0) > 0;
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
@@ -59,7 +59,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
         {
             IsCreateMode = true;
             Topic = new TopicDTO(Guid.NewGuid(), Language.Default(), Language.Default(), 
-                "", "", NoImageUrl, new List<WordUsageDTO>());
+                "", "", NoImageUrl, new List<PhraseUsageDTO>());
         }
         PictureUrl = Topic.PhotoUrl;
     }
@@ -151,7 +151,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
     [RelayCommand]
     private async Task StartLesson()
     {
-        if (Topic.WordUsages.Count < 0)
+        if (Topic.PhraseUsages.Count == 0)
         {
             await Toast.Make("We can't start lesson - no word usages in topic", ToastDuration.Long).Show();
             return;
@@ -170,20 +170,20 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
             return;
         }
 
-        await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
-            new WordUsageNavigationParameter(NavigationModes.New, Topic));
+        await Shell.Current.GoToAsync(nameof(Pages.PhraseUsageDetailPage),
+            new PhraseUsageNavigationParameter(NavigationModes.New, Topic));
     }
 
     [RelayCommand]
-    private async Task Tap(WordUsageDTO wordUsage)
+    private async Task Tap(PhraseUsageDTO phraseUsage)
     {
-        await Shell.Current.GoToAsync(nameof(Pages.WordUsageDetailPage),
-            new WordUsageNavigationParameter(NavigationModes.Exists, Topic, wordUsage));
+        await Shell.Current.GoToAsync(nameof(Pages.PhraseUsageDetailPage),
+            new PhraseUsageNavigationParameter(NavigationModes.Exists, Topic, phraseUsage));
     }
 
     private async Task LoadData()
     {
-        var languages = await _sender.Send(new GetLanguagesRequest());
+        var languages = await _sender.Send(new GetSortedLanguagesRequest());
         _languagesDict = languages.ToDictionary(x => x.Name, x => x);
         Languages = new ObservableCollection<string>(_languagesDict.Keys);
 

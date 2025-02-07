@@ -17,6 +17,71 @@ namespace MyVocabulary.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.1");
 
+            modelBuilder.Entity("MyVocabulary.Domain.Entities.Phrase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Culture")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Value");
+
+                    b.HasIndex("Culture", "Value")
+                        .IsUnique();
+
+                    b.ToTable("Phrases");
+                });
+
+            modelBuilder.Entity("MyVocabulary.Domain.Entities.PhraseUsage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("NativePhraseId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NativeSentence")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhotoUrl")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("TopicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TranslatedSentence")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("TranslationPhraseId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NativePhraseId");
+
+                    b.HasIndex("TopicId");
+
+                    b.HasIndex("TranslationPhraseId");
+
+                    b.ToTable("PhraseUsages");
+                });
+
             modelBuilder.Entity("MyVocabulary.Domain.Entities.Topic", b =>
                 {
                     b.Property<Guid>("Id")
@@ -67,116 +132,51 @@ namespace MyVocabulary.Infrastructure.Migrations
                     b.Property<bool>("IsRight")
                         .HasColumnType("INTEGER");
 
-                    b.Property<Guid>("WordUsageId")
+                    b.Property<Guid>("PhraseUsageId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("WordUsageId");
+                    b.HasIndex("PhraseUsageId");
 
-                    b.HasIndex("WordUsageId", "IsRight");
+                    b.HasIndex("PhraseUsageId", "IsRight");
 
                     b.ToTable("UserAnswers");
                 });
 
-            modelBuilder.Entity("MyVocabulary.Domain.Entities.Word", b =>
+            modelBuilder.Entity("MyVocabulary.Domain.Entities.PhraseUsage", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Culture")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(40)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Value");
-
-                    b.HasIndex("Culture", "Value")
-                        .IsUnique();
-
-                    b.ToTable("Words");
-                });
-
-            modelBuilder.Entity("MyVocabulary.Domain.Entities.WordUsage", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("NativeSentence")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("NativeWordId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhotoUrl")
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("TopicId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TranslatedSentence")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("TranslationWordId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NativeWordId");
-
-                    b.HasIndex("TopicId");
-
-                    b.HasIndex("TranslationWordId");
-
-                    b.ToTable("WordUsages");
-                });
-
-            modelBuilder.Entity("MyVocabulary.Domain.Entities.UserAnswer", b =>
-                {
-                    b.HasOne("MyVocabulary.Domain.Entities.WordUsage", null)
+                    b.HasOne("MyVocabulary.Domain.Entities.Phrase", null)
                         .WithMany()
-                        .HasForeignKey("WordUsageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("MyVocabulary.Domain.Entities.WordUsage", b =>
-                {
-                    b.HasOne("MyVocabulary.Domain.Entities.Word", null)
-                        .WithMany()
-                        .HasForeignKey("NativeWordId")
+                        .HasForeignKey("NativePhraseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("MyVocabulary.Domain.Entities.Topic", null)
-                        .WithMany("WordUsages")
+                        .WithMany("PhraseUsages")
                         .HasForeignKey("TopicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("MyVocabulary.Domain.Entities.Word", null)
+                    b.HasOne("MyVocabulary.Domain.Entities.Phrase", null)
                         .WithMany()
-                        .HasForeignKey("TranslationWordId")
+                        .HasForeignKey("TranslationPhraseId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MyVocabulary.Domain.Entities.UserAnswer", b =>
+                {
+                    b.HasOne("MyVocabulary.Domain.Entities.PhraseUsage", null)
+                        .WithMany()
+                        .HasForeignKey("PhraseUsageId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("MyVocabulary.Domain.Entities.Topic", b =>
                 {
-                    b.Navigation("WordUsages");
+                    b.Navigation("PhraseUsages");
                 });
 #pragma warning restore 612, 618
         }

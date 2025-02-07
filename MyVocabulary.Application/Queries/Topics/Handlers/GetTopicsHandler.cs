@@ -22,7 +22,7 @@ internal class GetTopicsHandler : IRequestHandler<GetTopicsRequest, Result<List<
 
         var result = topics.Select(x => new TopicDTO(x.Id, 
             new Language(x.CultureFrom), new Language(x.CultureTo), 
-            x.Header, x.Description, x.PhotoUrl, new List<WordUsageDTO>())).ToList();
+            x.Header, x.Description, x.PhotoUrl, new List<PhraseUsageDTO>())).ToList();
 
         return result;
     }

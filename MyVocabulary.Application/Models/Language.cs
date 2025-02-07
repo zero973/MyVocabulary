@@ -15,7 +15,7 @@ public class Language
     public string Name => Culture.NativeName;
 
     /// <summary>
-    /// The culture or language of the word (e.g., "en-US", "fr-FR").
+    /// The culture or language of the phrase or word (e.g., "en-US", "fr-FR").
     /// </summary>
     public string Value => Culture.Name;
 
@@ -43,6 +43,17 @@ public class Language
     public static Language Default()
     {
         return new Language(new CultureInfo("en"));
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+
+        var language = (obj as Language)!;
+
+        return Culture.Equals(language.Culture);
     }
 
 }

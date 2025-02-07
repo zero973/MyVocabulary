@@ -9,7 +9,7 @@ public class Topic : BaseEntity, IAggregateRoot
 {
 
     /// <summary>
-    /// The language of the words and sentences being studied in all <see cref="WordUsages"/> (e.g., "en-US", "fr-FR").
+    /// The language of the words and sentences being studied in all <see cref="PhraseUsages"/> (e.g., "en-US", "fr-FR").
     /// </summary>
     public string CultureFrom { get; private set; }
 
@@ -36,12 +36,12 @@ public class Topic : BaseEntity, IAggregateRoot
     /// <summary>
     /// A collection of word usage cases associated with this topic.
     /// </summary>
-    private readonly List<WordUsage> _wordUsages = new List<WordUsage>();
+    private readonly List<PhraseUsage> _phraseUsages = new List<PhraseUsage>();
 
     /// <summary>
     /// A read-only collection of word usage cases in the current topic.
     /// </summary>
-    public IReadOnlyCollection<WordUsage> WordUsages => _wordUsages.AsReadOnly();
+    public IReadOnlyCollection<PhraseUsage> PhraseUsages => _phraseUsages.AsReadOnly();
 
 #pragma warning disable CS8618 // Required by Entity Framework
     private Topic() { }
@@ -54,17 +54,17 @@ public class Topic : BaseEntity, IAggregateRoot
     /// <param name="header">The title or name of the topic.</param>
     /// <param name="description">The description of the topic.</param>
     /// <param name="photoUrl">An optional URL for the topic's cover image.</param>
-    /// <param name="wordsCases">The initial collection of word usage cases.</param>
+    /// <param name="phraseUsages">The initial collection of word usage cases.</param>
     /// <param name="id">The entity Id</param>
     public Topic(string cultureFrom, string cultureTo, string header,
-        string description, string? photoUrl, List<WordUsage> wordsCases)
+        string description, string? photoUrl, List<PhraseUsage> phraseUsages)
     {
         CultureFrom = cultureFrom;
         CultureTo = cultureTo;
         Header = header;
         Description = description;
         PhotoUrl = string.IsNullOrWhiteSpace(photoUrl) ? null : photoUrl;
-        _wordUsages = wordsCases ?? new List<WordUsage>();
+        _phraseUsages = phraseUsages ?? new List<PhraseUsage>();
     }
 
     /// <summary>
@@ -93,12 +93,12 @@ public class Topic : BaseEntity, IAggregateRoot
     /// <see langword="true"/> if the word usage case was successfully added; 
     /// <see langword="false"/> if it already exists in the collection.
     /// </returns>
-    public bool AddWordUsage(WordUsage wordUsage)
+    public bool AddWordUsage(PhraseUsage wordUsage)
     {
-        if (_wordUsages.Contains(wordUsage))
+        if (_phraseUsages.Contains(wordUsage))
             return false;
 
-        _wordUsages.Add(wordUsage);
+        _phraseUsages.Add(wordUsage);
         return true;
     }
 
@@ -110,9 +110,9 @@ public class Topic : BaseEntity, IAggregateRoot
     /// <see langword="true"/> if the word usage case was successfully removed; 
     /// otherwise, <see langword="false"/>.
     /// </returns>
-    public bool RemoveWordUsage(WordUsage wordUsage)
+    public bool RemoveWordUsage(PhraseUsage wordUsage)
     {
-        return _wordUsages.Remove(wordUsage);
+        return _phraseUsages.Remove(wordUsage);
     }
 
 }

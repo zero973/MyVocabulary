@@ -19,11 +19,11 @@ public class TopicDTO
 
     public string? PhotoUrl { get; set; }
 
-    public List<WordUsageDTO> WordUsages { get; set; } = new List<WordUsageDTO>();
+    public List<PhraseUsageDTO> PhraseUsages { get; set; } = new List<PhraseUsageDTO>();
 
     public TopicDTO(Guid id, Language cultureFrom, Language cultureTo, 
         string header, string description, string? photoUrl, 
-        List<WordUsageDTO> wordUsages)
+        List<PhraseUsageDTO> phraseUsages)
     {
         Id = id;
         CultureFrom = cultureFrom;
@@ -31,7 +31,9 @@ public class TopicDTO
         Header = header;
         Description = description;
         PhotoUrl = photoUrl;
-        WordUsages = wordUsages;
+        PhraseUsages = phraseUsages;
     }
+
+    public override string ToString() => $"{CultureFrom}-{CultureTo} {Header}";
 
 }

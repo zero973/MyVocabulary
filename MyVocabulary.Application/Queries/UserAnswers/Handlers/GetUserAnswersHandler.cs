@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MyVocabulary.Application.Models;
-using MyVocabulary.Application.Queries.WordUsages;
+using MyVocabulary.Application.Queries.PhraseUsages;
 using MyVocabulary.Application.Specifications;
 using MyVocabulary.Domain.Entities;
 using MyVocabulary.Domain.Interfaces;
@@ -24,12 +24,12 @@ internal class GetUserAnswersHandler : IRequestHandler<GetUserAnswersRequest, Re
     public async Task<Result<List<UserAnswerDTO>>> Handle(GetUserAnswersRequest request, CancellationToken cancellationToken)
     {
         var userAnswers = await _userAnswersRepository.ListAsync(request.Specification);
-        List<WordUsageDTO> wordUsages = await _sender.Send(new GetWordUsagesRequest(
-            new WordUsagesSpecification(userAnswers
-                .Select(x => x.WordUsageId).Distinct().ToArray())));
+        List<PhraseUsageDTO> phraseUsages = await _sender.Send(new GetPhraseUsagesRequest(
+            new PhraseUsagesSpecification(userAnswers
+                .Select(x => x.PhraseUsageId).Distinct().ToArray())));
 
         var result = userAnswers.Select(x => new UserAnswerDTO(x.Id, 
-            wordUsages.Single(y => y.Id == x.WordUsageId), x.IsRight)).ToList();
+            phraseUsages.Single(y => y.Id == x.PhraseUsageId), x.IsRight)).ToList();
 
         return result;
     }

@@ -59,7 +59,7 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
 
     private async Task LoadData()
     {
-        var languages = await _sender.Send(new GetLanguagesRequest());
+        var languages = await _sender.Send(new GetSortedLanguagesRequest());
         _languagesDict = languages.ToDictionary(x => x.Name, x => x);
         Languages = new ObservableCollection<string>(_languagesDict.Keys);
 
@@ -78,8 +78,6 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     {
         IsLoading = true;
 
-        await _sender.Send(new Application.Commands.App.OnAppStartedRequest());
-
         await LoadData();
 
         IsLoading = false;
@@ -93,9 +91,13 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     [RelayCommand]
     private async Task Tap(TopicDTO topic)
     {
+        IsLoading = true;
+
         var topicDto = await _sender.Send(new GetTopicRequest(topic.Id));
         await Shell.Current.GoToAsync(nameof(Pages.TopicDetailPage),
             new PageNavigationParameter<TopicDTO>(NavigationModes.Exists, topicDto));
+
+        IsLoading = false;
     }
 
     [RelayCommand]

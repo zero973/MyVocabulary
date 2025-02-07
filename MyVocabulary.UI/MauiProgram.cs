@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Maui;
 using Fonts;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using MyVocabulary.Application.Commands.App;
+using MyVocabulary.Application.Commands.Database;
 using MyVocabulary.Domain.Interfaces;
 using MyVocabulary.UI.Extensions;
 using Syncfusion.Maui.Toolkit.Hosting;
@@ -39,14 +42,19 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IConfiguration>(configuration);
 
-        var installers = new List<IModuleInstaller>() 
-        { 
-            new Infrastructure.ModuleInstaller(), 
-            new Application.ModuleInstaller() 
+        var installers = new List<IModuleInstaller>()
+        {
+            new Infrastructure.ModuleInstaller(),
+            new Application.ModuleInstaller()
         };
 
         foreach (var installer in installers.OrderBy(x => x.Order))
             installer.Install(builder.Services, configuration);
+
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssemblies(typeof(MauiProgram).Assembly);
+        });
 
 #if DEBUG
         builder.Logging.AddDebug();
@@ -54,6 +62,23 @@ public static class MauiProgram
 
         builder.Services.RegisterPagesAndModels();
 
-        return builder.Build();
+        var app = builder.Build();
+
+        SetAppCulture(app);
+
+        return app;
+    }
+
+    private static void SetAppCulture(MauiApp app)
+    {
+        using IServiceScope scope = app.Services.CreateScope();
+        var sender = scope.ServiceProvider.GetRequiredService<ISender>();
+
+        Task.Run(() => sender.Send(new MigrateDatabase()));
+
+        var userSettings = Task.Run(() => sender.Send(new LoadUserSettingsRequest())).Result;
+
+        Thread.CurrentThread.CurrentCulture = userSettings.Value.AppLanguage.Culture;
+        Thread.CurrentThread.CurrentUICulture = userSettings.Value.AppLanguage.Culture;
     }
 }

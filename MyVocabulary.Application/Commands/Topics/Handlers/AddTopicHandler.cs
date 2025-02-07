@@ -21,9 +21,9 @@ internal class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDT
 
     public async Task<Result<TopicDTO>> Handle(AddTopicRequest request, CancellationToken cancellationToken)
     {
-        var wordUsages = request.Entity.WordUsages.Select(x => new WordUsage(x.Topic.Id, 
-            x.NativeWord.Id, 
-            x.TranslationWord.Id, 
+        var phraseUsages = request.Entity.PhraseUsages.Select(x => new PhraseUsage(x.Topic.Id, 
+            x.NativePhrase.Id, 
+            x.TranslationPhrase.Id, 
             x.NativeSentence, 
             x.TranslatedSentence, 
             x.PhotoUrl)).ToList();
@@ -33,13 +33,13 @@ internal class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDT
             request.Entity.Header,
             request.Entity.Description,
             request.Entity.PhotoUrl,
-            wordUsages);
+            phraseUsages);
 
         var result = await _topicsRepository.AddAsync(topic);
         var topicDto = await _sender.Send(new GetTopicRequest(result.Id));
 
-        // todo check need I add wordUsages manually like this
-        // _wordUsageRepository.AddRange(wordUsages);
+        // todo check need I add phraseUsages manually like this
+        // _phraseUsageRepository.AddRange(phraseUsages);
 
         return topicDto;
     }

@@ -123,8 +123,14 @@
   <data name="Error" xml:space="preserve">
     <value>Ошибка</value>
   </data>
+  <data name="Loading" xml:space="preserve">
+    <value>Загрузка...</value>
+  </data>
   <data name="LoadMore" xml:space="preserve">
     <value>Загрузить ещё</value>
+  </data>
+  <data name="MyVocabulary" xml:space="preserve">
+    <value>Мой словарь</value>
   </data>
   <data name="No" xml:space="preserve">
     <value>Нет</value>
@@ -135,7 +141,55 @@
   <data name="SearchTextPlaceholder" xml:space="preserve">
     <value>Найти топики ...</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Настройки</value>
+  </data>
+  <data name="Topic" xml:space="preserve">
+    <value>Топик</value>
+  </data>
+  <data name="Topics" xml:space="preserve">
+    <value>Топики</value>
+  </data>
+  <data name="UserAnswers" xml:space="preserve">
+    <value>Ответы</value>
+  </data>
+  <data name="Phrase" xml:space="preserve">
+    <value>Слово</value>
+  </data>
+  <data name="Phrases" xml:space="preserve">
+    <value>Слова</value>
+  </data>
+  <data name="PhraseUsage" xml:space="preserve">
+    <value>Использование фразы</value>
+  </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
+  </data>
+  <data name="TopicName" xml:space="preserve">
+    <value>Название топика</value>
+  </data>
+  <data name="Description" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="AmazingTopic" xml:space="preserve">
+    <value>Невероятный топик...</value>
+  </data>
+  <data name="TopicDescription" xml:space="preserve">
+    <value>Описание топика...</value>
+  </data>
+  <data name="LanguageFrom" xml:space="preserve">
+    <value>Базовый язык</value>
+  </data>
+  <data name="LanguageTo" xml:space="preserve">
+    <value>Язык перевода</value>
+  </data>
+  <data name="AddPhraseUsage" xml:space="preserve">
+    <value>Добавить использование фразы</value>
+  </data>
+  <data name="NoPhraseUsages" xml:space="preserve">
+    <value>Нет вариантов использования фраз...</value>
+  </data>
+  <data name="EnterImageURL" xml:space="preserve">
+    <value>Введите URL картинки:</value>
   </data>
 </root>

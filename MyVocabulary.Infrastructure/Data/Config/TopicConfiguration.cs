@@ -29,7 +29,7 @@ public class TopicConfiguration : IEntityTypeConfiguration<Topic>
             .HasColumnType("text")
             .IsRequired(false);
 
-        builder.Navigation(topic => topic.WordUsages)
+        builder.Navigation(topic => topic.PhraseUsages)
             .UsePropertyAccessMode(PropertyAccessMode.Field);
 
         builder.HasIndex(e => e.Header);

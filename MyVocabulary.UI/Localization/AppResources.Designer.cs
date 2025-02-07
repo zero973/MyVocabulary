@@ -61,11 +61,47 @@ namespace MyVocabulary.UI.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Add phrase usage.
+        /// </summary>
+        internal static string AddPhraseUsage {
+            get {
+                return ResourceManager.GetString("AddPhraseUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Amazing topic....
+        /// </summary>
+        internal static string AmazingTopic {
+            get {
+                return ResourceManager.GetString("AmazingTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Attention.
         /// </summary>
         internal static string Attention {
             get {
                 return ResourceManager.GetString("Attention", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Description.
+        /// </summary>
+        internal static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter image URL:.
+        /// </summary>
+        internal static string EnterImageURL {
+            get {
+                return ResourceManager.GetString("EnterImageURL", resourceCulture);
             }
         }
         
@@ -79,11 +115,47 @@ namespace MyVocabulary.UI.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Language from.
+        /// </summary>
+        internal static string LanguageFrom {
+            get {
+                return ResourceManager.GetString("LanguageFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Language to.
+        /// </summary>
+        internal static string LanguageTo {
+            get {
+                return ResourceManager.GetString("LanguageTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Loading....
+        /// </summary>
+        internal static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Load more.
         /// </summary>
         internal static string LoadMore {
             get {
                 return ResourceManager.GetString("LoadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на MyVocabulary.
+        /// </summary>
+        internal static string MyVocabulary {
+            get {
+                return ResourceManager.GetString("MyVocabulary", resourceCulture);
             }
         }
         
@@ -97,6 +169,15 @@ namespace MyVocabulary.UI.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No phrase usages....
+        /// </summary>
+        internal static string NoPhraseUsages {
+            get {
+                return ResourceManager.GetString("NoPhraseUsages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Ok.
         /// </summary>
         internal static string Ok {
@@ -106,11 +187,92 @@ namespace MyVocabulary.UI.Localization {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Phrase.
+        /// </summary>
+        internal static string Phrase {
+            get {
+                return ResourceManager.GetString("Phrase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Phrases.
+        /// </summary>
+        internal static string Phrases {
+            get {
+                return ResourceManager.GetString("Phrases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Phrase usage.
+        /// </summary>
+        internal static string PhraseUsage {
+            get {
+                return ResourceManager.GetString("PhraseUsage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Search topics ....
         /// </summary>
         internal static string SearchTextPlaceholder {
             get {
                 return ResourceManager.GetString("SearchTextPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Settings.
+        /// </summary>
+        internal static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Topic.
+        /// </summary>
+        internal static string Topic {
+            get {
+                return ResourceManager.GetString("Topic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Topic description....
+        /// </summary>
+        internal static string TopicDescription {
+            get {
+                return ResourceManager.GetString("TopicDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Topic name.
+        /// </summary>
+        internal static string TopicName {
+            get {
+                return ResourceManager.GetString("TopicName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Topics.
+        /// </summary>
+        internal static string Topics {
+            get {
+                return ResourceManager.GetString("Topics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на User answers.
+        /// </summary>
+        internal static string UserAnswers {
+            get {
+                return ResourceManager.GetString("UserAnswers", resourceCulture);
             }
         }
         

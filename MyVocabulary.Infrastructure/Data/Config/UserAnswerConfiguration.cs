@@ -8,13 +8,13 @@ public class UserAnswerConfiguration : IEntityTypeConfiguration<UserAnswer>
 {
     public void Configure(EntityTypeBuilder<UserAnswer> builder)
     {
-        builder.HasIndex(e => e.WordUsageId);
+        builder.HasIndex(e => e.PhraseUsageId);
 
-        builder.HasIndex(e => new { e.WordUsageId, e.IsRight });
+        builder.HasIndex(e => new { e.PhraseUsageId, e.IsRight });
 
-        builder.HasOne<WordUsage>()
+        builder.HasOne<PhraseUsage>()
             .WithMany()
-            .HasForeignKey(w => w.WordUsageId)
+            .HasForeignKey(w => w.PhraseUsageId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

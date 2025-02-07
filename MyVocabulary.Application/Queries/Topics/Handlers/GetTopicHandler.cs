@@ -1,7 +1,7 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using MyVocabulary.Application.Models;
-using MyVocabulary.Application.Queries.Words;
+using MyVocabulary.Application.Queries.Phrases;
 using MyVocabulary.Application.Specifications;
 using MyVocabulary.Domain.Entities;
 using MyVocabulary.Domain.Interfaces;
@@ -25,12 +25,12 @@ internal class GetTopicHandler : IRequestHandler<GetTopicRequest, Result<TopicDT
         var topic = (await _topicsRepository.FirstOrDefaultAsync(
             new TopicsSpecification(request.Id, true)))!;
 
-        var wordUsages = new List<WordUsageDTO>();
-        var wordIds = topic.WordUsages.Select(x => x.NativeWordId)
-            .Union(topic.WordUsages.Select(x => x.TranslationWordId))
+        var phraseUsages = new List<PhraseUsageDTO>();
+        var phraseIds = topic.PhraseUsages.Select(x => x.NativePhraseId)
+            .Union(topic.PhraseUsages.Select(x => x.TranslationPhraseId))
             .ToArray();
 
-        var words = (await _sender.Send(new GetWordsRequest(new WordsSpecification(wordIds))))
+        var phrases = (await _sender.Send(new GetPhrasesRequest(new PhrasesSpecification(phraseIds))))
             .Value.ToDictionary(x => x.Id, x => x);
 
         var result = new TopicDTO(topic.Id,
@@ -39,13 +39,13 @@ internal class GetTopicHandler : IRequestHandler<GetTopicRequest, Result<TopicDT
             topic.Header,
             topic.Description,
             topic.PhotoUrl,
-            wordUsages);
+            phraseUsages);
 
-        foreach (var w in topic.WordUsages)
-            wordUsages.Add(new WordUsageDTO(w.Id,
+        foreach (var w in topic.PhraseUsages)
+            phraseUsages.Add(new PhraseUsageDTO(w.Id,
                 result, 
-                words[w.NativeWordId], 
-                words[w.TranslationWordId], 
+                phrases[w.NativePhraseId], 
+                phrases[w.TranslationPhraseId], 
                 w.NativeSentence, 
                 w.TranslatedSentence, 
                 w.PhotoUrl));

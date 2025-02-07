@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\App\Handlers\" />
     <Folder Include="Commands\UserAnswers\Handlers\" />
   </ItemGroup>
 

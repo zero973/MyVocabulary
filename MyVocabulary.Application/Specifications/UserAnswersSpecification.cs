@@ -17,16 +17,16 @@ public class UserAnswersSpecification : Specification<UserAnswer>
         Query.Where(x => x.IsRight == isCorrect);
     }
 
-    public UserAnswersSpecification(uint skip, uint take, Guid[] wordUsageIds)
+    public UserAnswersSpecification(uint skip, uint take, Guid[] phraseUsageIds)
         : this(skip, take)
     {
-        Query.Where(x => wordUsageIds.Contains(x.WordUsageId));
+        Query.Where(x => phraseUsageIds.Contains(x.PhraseUsageId));
     }
 
-    public UserAnswersSpecification(uint skip, uint take, bool isCorrect, Guid[] wordUsageIds)
+    public UserAnswersSpecification(uint skip, uint take, bool isCorrect, Guid[] phraseUsageIds)
         : this(skip, take)
     {
-        Query.Where(x => x.IsRight == isCorrect && wordUsageIds.Contains(x.WordUsageId));
+        Query.Where(x => x.IsRight == isCorrect && phraseUsageIds.Contains(x.PhraseUsageId));
     }
 
 }

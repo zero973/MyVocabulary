@@ -48,15 +48,15 @@ public class TopicsSpecification : Specification<Topic>
     }
 
     /// <summary>
-    /// Search topic by id and load word usages if requires.
+    /// Search topic by id and load phrase usages if requires.
     /// </summary>
     /// <param name="id"></param>
-    /// <param name="isLoadWordUsages"></param>
-    public TopicsSpecification(Guid id, bool isLoadWordUsages)
+    /// <param name="isLoadPhraseUsages"></param>
+    public TopicsSpecification(Guid id, bool isLoadPhraseUsages)
     {
-        if (isLoadWordUsages)
+        if (isLoadPhraseUsages)
             Query
-                .Include(x => x.WordUsages)
+                .Include(x => x.PhraseUsages)
                 .Where(x => x.Id == id);
         else
             Query.Where(x => x.Id == id);

@@ -5,29 +5,30 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:sf="clr-namespace:Syncfusion.Maui.Toolkit.SegmentedControl;assembly=Syncfusion.Maui.Toolkit"
     xmlns:pages="clr-namespace:MyVocabulary.UI.Pages"
+    xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
     Shell.FlyoutBehavior="Flyout"
-    Title="MyVocabulary">
+    Title="{x:Static localization:AppResources.MyVocabulary}">
 
     <ShellContent
-        Title="Topics"
+        Title="{x:Static localization:AppResources.Topics}"
         Icon="{StaticResource IconTopics}"
         ContentTemplate="{DataTemplate pages:MainPage}"
         Route="main" />
 
     <ShellContent
-        Title="Words"
+        Title="{x:Static localization:AppResources.Phrases}"
         Icon="{StaticResource IconWords}"
-        ContentTemplate="{DataTemplate pages:WordsPage}"
-        Route="words" />
+        ContentTemplate="{DataTemplate pages:PhrasesPage}"
+        Route="phrases" />
 
     <ShellContent
-        Title="Answers"
+        Title="{x:Static localization:AppResources.UserAnswers}"
         Icon="{StaticResource IconAnswers}"
         ContentTemplate="{DataTemplate pages:UserAnswersPage}"
         Route="answers" />
 
     <ShellContent
-        Title="Settings"
+        Title="{x:Static localization:AppResources.Settings}"
         Icon="{StaticResource IconSettings}"
         ContentTemplate="{DataTemplate pages:SettingsPage}"
         Route="settings" />
