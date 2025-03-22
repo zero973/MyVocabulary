@@ -13,6 +13,8 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(Pages.PhraseDetailPage), typeof(Pages.PhraseDetailPage));
         Routing.RegisterRoute(nameof(Pages.PhrasesPage), typeof(Pages.PhrasesPage));
         Routing.RegisterRoute(nameof(Pages.PhraseUsageDetailPage), typeof(Pages.PhraseUsageDetailPage));
+        Routing.RegisterRoute(nameof(Pages.TopicPracticePage), typeof(Pages.TopicPracticePage));
+        Routing.RegisterRoute(nameof(Pages.LessonPage), typeof(Pages.LessonPage));
     }
 
     private void SfSegmentedControl_SelectionChanged(object sender, 

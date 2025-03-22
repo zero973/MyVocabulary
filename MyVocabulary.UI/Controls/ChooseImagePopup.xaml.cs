@@ -7,7 +7,7 @@ namespace MyVocabulary.UI.Controls;
 public partial class ChooseImagePopup : Popup
 {
 
-    public string ImageUrl { get; private set; } = string.Empty;
+    private string ImageUrl { get; set; } = string.Empty;
 
     public ChooseImagePopup(string? curImage)
 	{
@@ -15,7 +15,7 @@ public partial class ChooseImagePopup : Popup
         ImageUrl = curImage ?? string.Empty;
     }
 
-    private async void ConfirmPopup(object sender, EventArgs e)
+    private void ConfirmPopup(object sender, EventArgs e)
     {
         ImageUrl = UrlEntry.Text?.Trim() ?? string.Empty;
 
@@ -26,7 +26,7 @@ public partial class ChooseImagePopup : Popup
 
             if (!result)
             {
-                await Toast.Make("Photo URL must be a valid web address (starting with http:// or https://)", 
+                Toast.Make("Photo URL must be a valid web address (starting with http:// or https://)", 
                     ToastDuration.Long).Show();
                 return;
             }

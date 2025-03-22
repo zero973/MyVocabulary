@@ -6,24 +6,16 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.Phrases.Handlers;
 
-internal class EditPhraseHandler : IRequestHandler<EditPhraseRequest, Result<PhraseDTO>>
+internal class EditPhraseHandler(IRepository<Phrase> phrasesRepository)
+    : IRequestHandler<EditPhraseRequest, Result<PhraseDTO>>
 {
-
-    private readonly IRepository<Phrase> _phrasesRepository;
-
-    public EditPhraseHandler(IRepository<Phrase> phrasesRepository)
-    {
-        _phrasesRepository = phrasesRepository;
-    }
-
     public async Task<Result<PhraseDTO>> Handle(EditPhraseRequest request, CancellationToken cancellationToken)
     {
-        var phrase = await _phrasesRepository.GetByIdAsync(request.Entity.Id);
+        var phrase = await phrasesRepository.GetByIdAsync(request.Entity.Id, cancellationToken);
         phrase!.Edit(request.Entity.Value, request.Entity.Language.Value);
 
-        await _phrasesRepository.UpdateAsync(phrase);
+        await phrasesRepository.UpdateAsync(phrase, cancellationToken);
 
         return new PhraseDTO(phrase.Id, phrase.Value, new Language(phrase.Culture));
     }
-
 }

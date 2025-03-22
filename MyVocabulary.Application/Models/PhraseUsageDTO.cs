@@ -1,6 +1,8 @@
-﻿namespace MyVocabulary.Application.Models;
+﻿using MyVocabulary.Domain.Interfaces;
 
-public class PhraseUsageDTO
+namespace MyVocabulary.Application.Models;
+
+public class PhraseUsageDTO : ICloneable<PhraseUsageDTO>
 {
 
     public Guid Id { get; set; }
@@ -31,5 +33,7 @@ public class PhraseUsageDTO
     }
 
     public override string ToString() => $"{NativePhrase.Value} - {TranslationPhrase.Value}";
-
+    
+    public PhraseUsageDTO Clone() => (PhraseUsageDTO)MemberwiseClone();
+    
 }

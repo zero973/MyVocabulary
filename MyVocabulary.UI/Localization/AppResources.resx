@@ -192,4 +192,40 @@
   <data name="EnterImageURL" xml:space="preserve">
     <value>Enter image URL:</value>
   </data>
+  <data name="NativeSentence" xml:space="preserve">
+    <value>Native sentence...</value>
+  </data>
+  <data name="TranslatedSentence" xml:space="preserve">
+    <value>Translated sentence...</value>
+  </data>
+  <data name="PlaceholderPhrase" xml:space="preserve">
+    <value>phrase...</value>
+  </data>
+  <data name="PlaceholderTranslation" xml:space="preserve">
+    <value>translation...</value>
+  </data>
+  <data name="PracticeIt" xml:space="preserve">
+    <value>Practice it</value>
+  </data>
+  <data name="StartLesson" xml:space="preserve">
+    <value>Practice</value>
+  </data>
+  <data name="Random" xml:space="preserve">
+    <value>Random</value>
+  </data>
+  <data name="FixMistakes" xml:space="preserve">
+    <value>Fix mistakes</value>
+  </data>
+  <data name="LearnNewWords" xml:space="preserve">
+    <value>Learn new words</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="RememberTranslation" xml:space="preserve">
+    <value>Remember translation</value>
+  </data>
+  <data name="ChooseCorrectTranslation" xml:space="preserve">
+    <value>Choose correct translation</value>
+  </data>
 </root>

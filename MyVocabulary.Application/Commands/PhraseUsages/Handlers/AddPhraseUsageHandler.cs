@@ -8,24 +8,15 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.PhraseUsages.Handlers;
 
-internal class AddPhraseUsageHandler : IRequestHandler<AddPhraseUsageRequest, Result<PhraseUsageDTO>>
+internal class AddPhraseUsageHandler(IRepository<PhraseUsage> phraseUsagesRepository, ISender sender)
+    : IRequestHandler<AddPhraseUsageRequest, Result<PhraseUsageDTO>>
 {
-
-    private readonly IRepository<PhraseUsage> _phraseUsagesRepository;
-    private readonly ISender _sender;
-
-    public AddPhraseUsageHandler(IRepository<PhraseUsage> phraseUsagesRepository, ISender sender)
-    {
-        _phraseUsagesRepository = phraseUsagesRepository;
-        _sender = sender;
-    }
-
     public async Task<Result<PhraseUsageDTO>> Handle(AddPhraseUsageRequest request, CancellationToken cancellationToken)
     {
-        var nativePhrase = await _sender.Send(new GetOrCreatePhraseRequest(
-            request.Entity.NativePhrase.Value, request.Entity.NativePhrase.Language));
-        var translationPhrase = await _sender.Send(new GetOrCreatePhraseRequest(
-            request.Entity.TranslationPhrase.Value, request.Entity.TranslationPhrase.Language));
+        var nativePhrase = await sender.Send(new GetOrCreatePhraseRequest(
+            request.Entity.NativePhrase.Value, request.Entity.NativePhrase.Language), cancellationToken);
+        var translationPhrase = await sender.Send(new GetOrCreatePhraseRequest(
+            request.Entity.TranslationPhrase.Value, request.Entity.TranslationPhrase.Language), cancellationToken);
 
         var phraseUsage = new PhraseUsage(request.Entity.Topic.Id,
             nativePhrase.Value.Id,
@@ -34,10 +25,9 @@ internal class AddPhraseUsageHandler : IRequestHandler<AddPhraseUsageRequest, Re
             request.Entity.TranslatedSentence, 
             request.Entity.PhotoUrl);
 
-        var result = await _phraseUsagesRepository.AddAsync(phraseUsage);
-        var phraseUsageDTO = await _sender.Send(new GetPhraseUsageRequest(result.Id));
+        var result = await phraseUsagesRepository.AddAsync(phraseUsage, cancellationToken);
+        var phraseUsageDto = await sender.Send(new GetPhraseUsageRequest(result.Id), cancellationToken);
 
-        return phraseUsageDTO;
+        return phraseUsageDto;
     }
-
 }

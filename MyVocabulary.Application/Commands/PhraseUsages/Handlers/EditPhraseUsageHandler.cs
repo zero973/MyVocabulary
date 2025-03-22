@@ -8,24 +8,15 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.PhraseUsages.Handlers;
 
-internal class EditPhraseUsageHandler : IRequestHandler<EditPhraseUsageRequest, Result<PhraseUsageDTO>>
+internal class EditPhraseUsageHandler(IRepository<PhraseUsage> phraseUsagesRepository, ISender sender)
+    : IRequestHandler<EditPhraseUsageRequest, Result<PhraseUsageDTO>>
 {
-
-    private readonly IRepository<PhraseUsage> _phraseUsagesRepository;
-    private readonly ISender _sender;
-
-    public EditPhraseUsageHandler(IRepository<PhraseUsage> phraseUsagesRepository, ISender sender)
-    {
-        _phraseUsagesRepository = phraseUsagesRepository;
-        _sender = sender;
-    }
-
     public async Task<Result<PhraseUsageDTO>> Handle(EditPhraseUsageRequest request, CancellationToken cancellationToken)
     {
-        var phraseUsage = await _phraseUsagesRepository.GetByIdAsync(request.Entity.Id);
-        var nativePhrase = await _sender.Send(new GetOrCreatePhraseRequest(
+        var phraseUsage = await phraseUsagesRepository.GetByIdAsync(request.Entity.Id);
+        var nativePhrase = await sender.Send(new GetOrCreatePhraseRequest(
              request.Entity.NativePhrase.Value, request.Entity.NativePhrase.Language));
-        var translationPhrase = await _sender.Send(new GetOrCreatePhraseRequest(
+        var translationPhrase = await sender.Send(new GetOrCreatePhraseRequest(
             request.Entity.TranslationPhrase.Value, request.Entity.TranslationPhrase.Language));
 
         phraseUsage!.Edit(request.Entity.Topic.Id,
@@ -35,8 +26,8 @@ internal class EditPhraseUsageHandler : IRequestHandler<EditPhraseUsageRequest, 
             request.Entity.TranslatedSentence,
             request.Entity.PhotoUrl);
 
-        await _phraseUsagesRepository.UpdateAsync(phraseUsage);
-        var phraseUsageDto = await _sender.Send(new GetPhraseUsageRequest(phraseUsage.Id));
+        await phraseUsagesRepository.UpdateAsync(phraseUsage);
+        var phraseUsageDto = await sender.Send(new GetPhraseUsageRequest(phraseUsage.Id));
 
         return phraseUsageDto;
     }

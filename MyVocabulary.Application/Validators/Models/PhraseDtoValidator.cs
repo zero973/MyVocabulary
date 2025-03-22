@@ -16,8 +16,8 @@ public class PhraseDtoValidator : AbstractValidator<PhraseDTO>
             .WithMessage("Phrase or word must not exceed 50 characters");
 
         RuleFor(x => x.Value)
-            .Must((phrase, value) => value.All(char.IsLetter))
-            .WithMessage("Phrase or word can't contain numbers and special symbols");
+            .Must((phrase, value) => value.All(x => char.IsLetter(x) || x == ' ' || x == '-'))
+            .WithMessage("Phrase or word can't contain numbers and special symbols (exclude whitespace and dash)");
 
         RuleFor(x => x.Language)
             .NotNull();

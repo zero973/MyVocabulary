@@ -7,41 +7,31 @@ using MyVocabulary.Infrastructure.Data;
 
 namespace MyVocabulary.Infrastructure.Commands.Database.Handlers;
 
-public class MigrateDatabaseHandler : IRequestHandler<MigrateDatabase, Result>
+internal class MigrateDatabaseHandler(AppDbContext context, ILogger<MigrateDatabaseHandler> logger)
+    : IRequestHandler<MigrateDatabase, Result>
 {
-
-    private readonly AppDbContext _context;
-    private readonly ILogger<MigrateDatabaseHandler> _logger;
-
-    public MigrateDatabaseHandler(AppDbContext context, ILogger<MigrateDatabaseHandler> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
-
     public async Task<Result> Handle(MigrateDatabase request, CancellationToken cancellationToken)
     {
         try
         {
-            var migrations = (await _context.Database.GetPendingMigrationsAsync()).ToList();
+            var migrations = (await context.Database.GetPendingMigrationsAsync(cancellationToken)).ToList();
 
             if (!migrations.Any())
                 return Result.Success();
 
-            _logger.LogInformation("Unfulfilled migrations detected:"
+            logger.LogInformation("Unfulfilled migrations detected:"
                 + Environment.NewLine + string.Join(Environment.NewLine, migrations));
 
-            _logger.LogInformation("Launching migrations...");
-            await _context.Database.MigrateAsync(cancellationToken);
-            _logger.LogInformation("Migrations completed");
+            logger.LogInformation("Launching migrations...");
+            await context.Database.MigrateAsync(cancellationToken);
+            logger.LogInformation("Migrations completed");
 
             return Result.Success();
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Error when performing migrations");
+            logger.LogError(e, "Error when performing migrations");
             return Result.Error($"Error when performing migrations: {e.Message}");
         }
     }
-
 }

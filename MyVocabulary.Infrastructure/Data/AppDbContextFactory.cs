@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 
 namespace MyVocabulary.Infrastructure.Data;
 
-public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
+internal class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
 {
     public AppDbContext CreateDbContext(string[] args)
     {

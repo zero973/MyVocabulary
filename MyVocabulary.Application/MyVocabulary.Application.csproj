@@ -17,9 +17,4 @@
     <ProjectReference Include="..\MyVocabulary.Domain\MyVocabulary.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Commands\App\Handlers\" />
-    <Folder Include="Commands\UserAnswers\Handlers\" />
-  </ItemGroup>
-
 </Project>

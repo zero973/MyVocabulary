@@ -8,7 +8,7 @@ using MyVocabulary.Application.Specifications;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class PhrasesPageModel(ISender _sender) : ObservableObject
+public partial class PhrasesPageModel(ISender sender) : ObservableObject
 {
 
     [ObservableProperty]
@@ -22,7 +22,7 @@ public partial class PhrasesPageModel(ISender _sender) : ObservableObject
 
     private async Task LoadData()
     {
-        var words = await _sender.Send(new GetPhrasesRequest(new PhrasesSpecification(0, 10)));
+        var words = await sender.Send(new GetPhrasesRequest(new PhrasesSpecification(0, 10)));
         Phrases = new ObservableCollection<PhraseDTO>(words);
     }
 

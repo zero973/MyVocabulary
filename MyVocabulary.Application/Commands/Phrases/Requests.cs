@@ -20,6 +20,6 @@ public record EditPhraseRequest(PhraseDTO Entity) : IRequest<Result<PhraseDTO>>;
 public record DeletePhraseRequest(Guid Id) : IRequest<Result>;
 
 /// <summary>
-/// Return phrase or create it, if phrase doesn't exists
+/// Return phrase or create it, if phrase doesn't exist
 /// </summary>
 public record GetOrCreatePhraseRequest(string Phrase, Language Language) : IRequest<Result<PhraseDTO>>;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MediatR;
@@ -11,12 +12,12 @@ using MyVocabulary.UI.NavigationParameters;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class MainPageModel(ISender _sender) : ObservableObject
+public partial class MainPageModel(ISender sender) : ObservableObject
 {
 
     private const int TakeElementsCount = 25;
 
-    private uint PageNumber = 0;
+    private uint _pageNumber = 0;
 
     /// <summary>
     /// Languages dictionary
@@ -59,43 +60,43 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
 
     private async Task LoadData()
     {
-        var languages = await _sender.Send(new GetSortedLanguagesRequest());
+        var languages = await sender.Send(new GetSortedLanguagesRequest());
         _languagesDict = languages.ToDictionary(x => x.Name, x => x);
         Languages = new ObservableCollection<string>(_languagesDict.Keys);
 
-        var topics = await _sender.Send(new GetTopicsRequest(
+        var topics = await sender.Send(new GetTopicsRequest(
             new TopicsSpecification(0, TakeElementsCount)));
         Topics = new ObservableCollection<TopicDTO>(topics);
 
         SelectedLanguageFrom = _languagesDict.First().Key;
         SelectedLanguageTo = _languagesDict.First().Key;
 
-        ShowLoadMoreButton = topics.Value.Any();
+        ShowLoadMoreButton = topics.Value.Count != 0;
     }
 
     [RelayCommand]
     private async Task Appearing()
     {
         IsLoading = true;
-
+        
         await LoadData();
-
+        
         IsLoading = false;
     }
 
     [RelayCommand]
     private async Task CreateTopic() 
         => await Shell.Current.GoToAsync(nameof(Pages.TopicDetailPage), 
-            new PageNavigationParameter<TopicDTO>(NavigationModes.New));
+            new PageNavigationParameter<TopicDTO>(NavigationTypes.Create, null));
 
     [RelayCommand]
     private async Task Tap(TopicDTO topic)
     {
         IsLoading = true;
 
-        var topicDto = await _sender.Send(new GetTopicRequest(topic.Id));
+        var topicDto = await sender.Send(new GetTopicRequest(topic.Id));
         await Shell.Current.GoToAsync(nameof(Pages.TopicDetailPage),
-            new PageNavigationParameter<TopicDTO>(NavigationModes.Exists, topicDto));
+            new PageNavigationParameter<TopicDTO>(NavigationTypes.Open, topicDto));
 
         IsLoading = false;
     }
@@ -103,9 +104,9 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
     [RelayCommand]
     private async Task Search()
     {
-        PageNumber = 0;
+        _pageNumber = 0;
 
-        var topics = await _sender.Send(new GetTopicsRequest(
+        var topics = await sender.Send(new GetTopicsRequest(
             new TopicsSpecification(0, 
                 TakeElementsCount, 
                 SearchText,
@@ -114,23 +115,23 @@ public partial class MainPageModel(ISender _sender) : ObservableObject
                 IsOneWaySearch)));
         Topics = new ObservableCollection<TopicDTO>(topics);
 
-        ShowLoadMoreButton = topics.Value.Any();
+        ShowLoadMoreButton = topics.Value.Count != 0;
     }
 
     [RelayCommand]
     private async Task LoadMore()
     {
-        PageNumber++;
+        _pageNumber++;
 
-        var topics = await _sender.Send(new GetTopicsRequest(
-            new TopicsSpecification(PageNumber, 
+        var topics = await sender.Send(new GetTopicsRequest(
+            new TopicsSpecification(_pageNumber, 
                 TakeElementsCount, 
                 SearchText,
                 _languagesDict[SelectedLanguageFrom], 
                 _languagesDict[SelectedLanguageTo],
                 IsOneWaySearch)));
 
-        ShowLoadMoreButton = topics.Value.Any();
+        ShowLoadMoreButton = topics.Value.Count != 0;
 
         foreach (var topic in topics.Value)
             Topics.Add(topic);

@@ -192,4 +192,40 @@
   <data name="EnterImageURL" xml:space="preserve">
     <value>Введите URL картинки:</value>
   </data>
+  <data name="NativeSentence" xml:space="preserve">
+    <value>Предложение на базовом языке...</value>
+  </data>
+  <data name="TranslatedSentence" xml:space="preserve">
+    <value>Переведённое предложение...</value>
+  </data>
+  <data name="PlaceholderPhrase" xml:space="preserve">
+    <value>фраза...</value>
+  </data>
+  <data name="PlaceholderTranslation" xml:space="preserve">
+    <value>перевод...</value>
+  </data>
+  <data name="PracticeIt" xml:space="preserve">
+    <value>Практиковать</value>
+  </data>
+  <data name="StartLesson" xml:space="preserve">
+    <value>Практиковать</value>
+  </data>
+  <data name="Random" xml:space="preserve">
+    <value>Случайно</value>
+  </data>
+  <data name="FixMistakes" xml:space="preserve">
+    <value>Исправление ошибок</value>
+  </data>
+  <data name="LearnNewWords" xml:space="preserve">
+    <value>Учить новые слова</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Продолжить</value>
+  </data>
+  <data name="RememberTranslation" xml:space="preserve">
+    <value>Запоминаем перевод</value>
+  </data>
+  <data name="ChooseCorrectTranslation" xml:space="preserve">
+    <value>Выберите правильный перевод</value>
+  </data>
 </root>

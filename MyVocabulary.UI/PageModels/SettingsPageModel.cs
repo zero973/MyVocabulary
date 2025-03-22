@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MediatR;
@@ -11,7 +10,7 @@ using MyVocabulary.UI.Localization;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class SettingsPageModel(ISender _sender) : ObservableObject
+public partial class SettingsPageModel(ISender sender) : ObservableObject
 {
 
     /// <summary>
@@ -31,27 +30,34 @@ public partial class SettingsPageModel(ISender _sender) : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Language> _preferredLanguages = [];
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CuntMonthsValidAnswersText))]
+    private uint _countMonthsValidAnswers;
+
+    public string CuntMonthsValidAnswersText => $"Count months valid answers: {CountMonthsValidAnswers}";
+
     [RelayCommand]
     private async Task Appearing()
     {
-        var languages = await _sender.Send(new GetLanguagesRequest());
+        var languages = await sender.Send(new GetLanguagesRequest());
         _languagesDict = languages.ToDictionary(x => x.Name, x => x);
         Languages = new ObservableCollection<string>(_languagesDict.Keys);
 
-        var result = await _sender.Send(new LoadUserSettingsRequest());
+        var result = await sender.Send(new LoadUserSettingsRequest());
 
         SelectedAppLanguage = result.Value.AppLanguage.Name;
         SelectedPreferLanguage = Languages[0];
         PreferredLanguages = new ObservableCollection<Language>(result.Value.PreferredLanguages);
+        CountMonthsValidAnswers = result.Value.CountMonthsValidAnswers;
     }
 
     [RelayCommand]
     private async Task AddPreferLanguage()
     {
-        if (!PreferredLanguages.Any(x => x.Name == SelectedPreferLanguage))
+        if (PreferredLanguages.All(x => x.Name != SelectedPreferLanguage))
             PreferredLanguages.Add(_languagesDict[SelectedPreferLanguage]);
         else
-            await Toast.Make("This language already added in list", ToastDuration.Short).Show();
+            await Toast.Make("This language already added in list").Show();
     }
 
     [RelayCommand]
@@ -69,12 +75,12 @@ public partial class SettingsPageModel(ISender _sender) : ObservableObject
     [RelayCommand]
     private async Task Save()
     {
-        var result = await _sender.Send(new SaveUserSettingsRequest(new UserSettings(
-            _languagesDict[SelectedAppLanguage], PreferredLanguages.ToArray())));
+        var result = await sender.Send(new SaveUserSettingsRequest(new UserSettings(
+            _languagesDict[SelectedAppLanguage], PreferredLanguages.ToArray(), CountMonthsValidAnswers)));
 
         if (result.IsSuccess)
         {
-            await Toast.Make("Settings saved successfully", ToastDuration.Short).Show();
+            await Toast.Make("Settings saved successfully").Show();
             return;
         }
 

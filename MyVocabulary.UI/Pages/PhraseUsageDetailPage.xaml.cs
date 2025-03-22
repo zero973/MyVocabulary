@@ -4,16 +4,9 @@ namespace MyVocabulary.UI.Pages;
 
 public partial class PhraseUsageDetailPage : ContentPage
 {
-
-    private readonly PhraseUsageDetailPageModel _model;
-
     public PhraseUsageDetailPage(PhraseUsageDetailPageModel model)
 	{
 		InitializeComponent();
-        BindingContext = _model = model;
+        BindingContext = model;
     }
-
-    protected async override void OnAppearing()
-        => await _model.AppearingCommand.ExecuteAsync(null);
-
 }

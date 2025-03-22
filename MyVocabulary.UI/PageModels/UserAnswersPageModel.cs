@@ -5,10 +5,11 @@ using MediatR;
 using MyVocabulary.Application.Models;
 using MyVocabulary.Application.Queries.UserAnswers;
 using MyVocabulary.Application.Specifications;
+using MyVocabulary.UI.Localization;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class UserAnswersPageModel : ObservableObject
+public partial class UserAnswersPageModel(ISender sender) : ObservableObject
 {
 
     /// <summary>
@@ -21,38 +22,16 @@ public partial class UserAnswersPageModel : ObservableObject
     /// </summary>
     private uint PageNumber = 0;
 
-    private bool _isNavigatedTo;
-
-    private readonly ISender _sender;
-
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasAnswers))]
     private ObservableCollection<UserAnswerDTO> _userAnswers = [];
 
     public bool HasAnswers => UserAnswers?.Any() ?? false;
 
-    public UserAnswersPageModel(ISender sender)
-    {
-        _sender = sender;
-    }
-
-    private async Task LoadData()
-    {
-        var answers = await _sender.Send(new GetUserAnswersRequest(
-            new UserAnswersSpecification(PageNumber, TakeElementsCount)));
-        UserAnswers = new ObservableCollection<UserAnswerDTO>(answers);
-    }
-
-    [RelayCommand]
-    private void NavigatedTo() => _isNavigatedTo = true;
-
-    [RelayCommand]
-    private void NavigatedFrom() => _isNavigatedTo = false;
-
     [RelayCommand]
     private async Task Appearing()
     {
-        if (!_isNavigatedTo)
-            await LoadData();
+        await LoadData();
     }
 
     [RelayCommand]
@@ -60,11 +39,27 @@ public partial class UserAnswersPageModel : ObservableObject
     {
         PageNumber++;
 
-        var userAnswers = await _sender.Send(new GetUserAnswersRequest(
+        var userAnswers = await sender.Send(new GetUserAnswersRequest(
             new UserAnswersSpecification(0, TakeElementsCount)));
 
         foreach (var topic in userAnswers.Value)
             UserAnswers.Add(topic);
+    }
+
+    [RelayCommand]
+    private async Task Tap(UserAnswerDTO answer)
+    {
+        var ensure = await Shell.Current.DisplayAlert(AppResources.Attention,
+            $"Do you want to delete this answer ({answer.Date} - {answer.IsRight}) ?", 
+            AppResources.Yes, AppResources.No);
+    }
+
+    private async Task LoadData()
+    {
+        var answers = (await sender.Send(new GetUserAnswersRequest(
+            new UserAnswersSpecification(PageNumber, TakeElementsCount)))).Value
+                .OrderBy(x => x.PhraseUsage.NativePhrase.Value);
+        UserAnswers = new ObservableCollection<UserAnswerDTO>(answers);
     }
 
 }

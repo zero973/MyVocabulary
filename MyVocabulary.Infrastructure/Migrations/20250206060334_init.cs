@@ -82,7 +82,7 @@ namespace MyVocabulary.Infrastructure.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     PhraseUsageId = table.Column<Guid>(type: "TEXT", nullable: false),
                     IsRight = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Date = table.Column<DateTimeOffset>(type: "TEXT", nullable: false)
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {

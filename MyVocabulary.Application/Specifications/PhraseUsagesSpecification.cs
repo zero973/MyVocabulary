@@ -3,7 +3,7 @@ using MyVocabulary.Domain.Entities;
 
 namespace MyVocabulary.Application.Specifications;
 
-public class PhraseUsagesSpecification : Specification<PhraseUsage>
+public sealed class PhraseUsagesSpecification : Specification<PhraseUsage>
 {
 
     public PhraseUsagesSpecification(uint skip, uint take)
@@ -20,6 +20,11 @@ public class PhraseUsagesSpecification : Specification<PhraseUsage>
     public PhraseUsagesSpecification(Guid[] phraseUsageIds)
     {
         Query.Where(x => phraseUsageIds.Contains(x.Id));
+    }
+
+    public PhraseUsagesSpecification(Guid phraseId)
+    {
+        Query.Where(x => x.NativePhraseId == phraseId || x.TranslationPhraseId == phraseId);
     }
 
 }

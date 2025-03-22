@@ -19,7 +19,8 @@ public class ModuleInstaller : IModuleInstaller
             {
                 options.MigrationsAssembly(typeof(AppDbContext).Assembly);
             });
-        }, ServiceLifetime.Singleton);
+            opts.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+        });
 
         services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
         services.AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));

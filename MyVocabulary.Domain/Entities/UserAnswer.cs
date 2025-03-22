@@ -21,7 +21,7 @@ public class UserAnswer : BaseEntity, IAggregateRoot
     /// <summary>
     /// The date and time when the answer was recorded.
     /// </summary>
-    public DateTimeOffset Date { get; private set; } = DateTimeOffset.Now;
+    public DateTime Date { get; private set; } = DateTime.UtcNow;
 
 #pragma warning disable CS8618 // Required by Entity Framework
     private UserAnswer() { }

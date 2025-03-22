@@ -3,64 +3,46 @@
 namespace MyVocabulary.UI.NavigationParameters;
 
 /// <summary>
-/// 
+/// Represents a navigation parameter that includes a <see cref="NavigationTypes"/> flag 
+/// and a strongly typed value for passing between pages.
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public class PageNavigationParameter<T> : ShellNavigationQueryParameters
+/// <typeparam name="T">The type of the value being passed.</typeparam>
+public class PageNavigationParameter<T> : NavigationParameterBase
     where T : class
 {
+    
+    /// <summary>
+    /// Gets the navigation mode indicating the context of the navigation.
+    /// </summary>
+    public NavigationTypes NavigationType => Get<NavigationTypes>(nameof(NavigationType));
 
     /// <summary>
-    /// 
+    /// Gets the strongly typed value being passed as a navigation parameter.
     /// </summary>
-    public NavigationModes Mode 
-    {
-        get 
-        {
-            TryGetValue(nameof(Mode), out var result);
-            return (NavigationModes)Convert.ToInt32(result!.ToString());
-        } 
-    }
+    public T Value => Get<T>(nameof(Value));
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="PageNavigationParameter{T}"/> class 
+    /// with a specified navigation mode and value.
     /// </summary>
-    public T? Value
-    {
-        get
-        {
-            TryGetValue(nameof(Value), out var result);
-            return result as T;
-        }
-    }
-
-    public PageNavigationParameter(NavigationModes mode, T? value = null)
-    {
-        Add(nameof(Mode), (int)mode);
-        if (value != null)
-            Add(nameof(Value), value);
-    }
+    /// <param name="navigationType">The navigation mode.</param>
+    /// <param name="value">The value to pass between pages.</param>
+    public PageNavigationParameter(NavigationTypes navigationType, T value)
+        : base((nameof(NavigationType), navigationType), (nameof(Value), value)) { }
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="PageNavigationParameter{T}"/> class 
+    /// from an existing dictionary of query parameters.
     /// </summary>
-    /// <param name="dictionary"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public static PageNavigationParameter<T> From(IDictionary<string, object> dictionary)
-    {
-        if (dictionary == null) throw new ArgumentNullException("Empty dictionary");
-        if (!dictionary.ContainsKey(nameof(Mode))) throw new ArgumentNullException("Missed mode setting");
+    /// <param name="query">The dictionary containing navigation parameters.</param>
+    private PageNavigationParameter(IDictionary<string, object> query) : base(query) { }
 
-        var mode = (NavigationModes)Convert.ToInt32(dictionary[nameof(Mode)].ToString());
-        if (mode == NavigationModes.New)
-            return new PageNavigationParameter<T>(mode, null);
-
-        var value = dictionary[nameof(Value)] as T;
-        if (mode == NavigationModes.Exists && value == null)
-            throw new ArgumentNullException("Value can't be null with this mode setting");
-
-        return new PageNavigationParameter<T>(mode, value);
-    }
-
+    /// <summary>
+    /// Creates an instance of <see cref="PageNavigationParameter{T}"/> from a given query dictionary.
+    /// </summary>
+    /// <param name="query">The dictionary containing navigation parameters.</param>
+    /// <returns>An instance of <see cref="PageNavigationParameter{T}"/> with the extracted values.</returns>
+    public static PageNavigationParameter<T> From(IDictionary<string, object> query) 
+        => new(query);
+    
 }

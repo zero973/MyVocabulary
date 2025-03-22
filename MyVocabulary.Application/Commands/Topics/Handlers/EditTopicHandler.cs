@@ -7,31 +7,21 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.Topics.Handlers;
 
-internal class EditTopicHandler : IRequestHandler<EditTopicRequest, Result<TopicDTO>>
+internal class EditTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
+    : IRequestHandler<EditTopicRequest, Result<TopicDTO>>
 {
-
-    private readonly IRepository<Topic> _topicsRepository;
-    private readonly ISender _sender;
-
-    public EditTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
-    {
-        _topicsRepository = topicsRepository;
-        _sender = sender;
-    }
-
     public async Task<Result<TopicDTO>> Handle(EditTopicRequest request, CancellationToken cancellationToken)
     {
-        var topic = await _topicsRepository.GetByIdAsync(request.Entity.Id);
+        var topic = await topicsRepository.GetByIdAsync(request.Entity.Id, cancellationToken);
         topic!.Edit(request.Entity.CultureFrom.Value,
             request.Entity.CultureTo.Value,
             request.Entity.Header, 
             request.Entity.Description, 
             request.Entity.PhotoUrl);
 
-        await _topicsRepository.UpdateAsync(topic);
-        var topicDto = await _sender.Send(new GetTopicRequest(topic.Id));
+        await topicsRepository.UpdateAsync(topic, cancellationToken);
+        var topicDto = await sender.Send(new GetTopicRequest(topic.Id), cancellationToken);
 
         return topicDto;
     }
-
 }

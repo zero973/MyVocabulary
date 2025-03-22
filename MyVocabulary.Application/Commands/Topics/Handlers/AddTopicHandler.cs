@@ -7,18 +7,9 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.Topics.Handlers;
 
-internal class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDTO>>
+internal class AddTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
+    : IRequestHandler<AddTopicRequest, Result<TopicDTO>>
 {
-
-    private readonly IRepository<Topic> _topicsRepository;
-    private readonly ISender _sender;
-
-    public AddTopicHandler(IRepository<Topic> topicsRepository, ISender sender)
-    {
-        _topicsRepository = topicsRepository;
-        _sender = sender;
-    }
-
     public async Task<Result<TopicDTO>> Handle(AddTopicRequest request, CancellationToken cancellationToken)
     {
         var phraseUsages = request.Entity.PhraseUsages.Select(x => new PhraseUsage(x.Topic.Id, 
@@ -35,13 +26,12 @@ internal class AddTopicHandler : IRequestHandler<AddTopicRequest, Result<TopicDT
             request.Entity.PhotoUrl,
             phraseUsages);
 
-        var result = await _topicsRepository.AddAsync(topic);
-        var topicDto = await _sender.Send(new GetTopicRequest(result.Id));
+        var result = await topicsRepository.AddAsync(topic, cancellationToken);
+        var topicDto = await sender.Send(new GetTopicRequest(result.Id), cancellationToken);
 
         // todo check need I add phraseUsages manually like this
         // _phraseUsageRepository.AddRange(phraseUsages);
 
         return topicDto;
     }
-
 }

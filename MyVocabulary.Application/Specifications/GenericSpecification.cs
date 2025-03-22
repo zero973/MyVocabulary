@@ -7,7 +7,7 @@ namespace MyVocabulary.Application.Specifications;
 /// Common specification
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class GenericSpecification<T> : Specification<T>
+public sealed class GenericSpecification<T> : Specification<T>
     where T : BaseEntity
 {
     public GenericSpecification(Guid id)

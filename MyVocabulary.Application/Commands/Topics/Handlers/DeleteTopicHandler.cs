@@ -5,21 +5,12 @@ using MyVocabulary.Domain.Interfaces;
 
 namespace MyVocabulary.Application.Commands.Topics.Handlers;
 
-internal class DeleteTopicHandler : IRequestHandler<DeleteTopicRequest, Result>
+internal class DeleteTopicHandler(IRepository<Topic> topicsRepository) : IRequestHandler<DeleteTopicRequest, Result>
 {
-
-    private readonly IRepository<Topic> _topicsRepository;
-
-    public DeleteTopicHandler(IRepository<Topic> topicsRepository)
-    {
-        _topicsRepository = topicsRepository;
-    }
-
     public async Task<Result> Handle(DeleteTopicRequest request, CancellationToken cancellationToken)
     {
-        var topic = await _topicsRepository.GetByIdAsync(request.Id);
-        await _topicsRepository.DeleteAsync(topic!);
+        var topic = await topicsRepository.GetByIdAsync(request.Id, cancellationToken);
+        await topicsRepository.DeleteAsync(topic!, cancellationToken);
         return Result.Success();
     }
-
 }

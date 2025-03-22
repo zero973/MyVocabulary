@@ -5,19 +5,12 @@ using MyVocabulary.Application.Models;
 
 namespace MyVocabulary.Application.Queries.Languages.Handlers;
 
-internal class GetSortedLanguagesHandler : IRequestHandler<GetSortedLanguagesRequest, Language[]>
+internal class GetSortedLanguagesHandler(ISender sender) : IRequestHandler<GetSortedLanguagesRequest, Language[]>
 {
-
-    private readonly ISender _sender;
-
-    public GetSortedLanguagesHandler(ISender sender)
-    {
-        _sender = sender;
-    }
-
     public async Task<Language[]> Handle(GetSortedLanguagesRequest request, CancellationToken cancellationToken)
     {
-        var preferredLanguages = (await _sender.Send(new LoadUserSettingsRequest())).Value.PreferredLanguages;
+        var preferredLanguages = (await sender.Send(new LoadUserSettingsRequest(), cancellationToken))
+            .Value.PreferredLanguages;
 
         var languages = CultureInfo.GetCultures(CultureTypes.NeutralCultures)
             .Where(x => !string.IsNullOrWhiteSpace(x.Name))

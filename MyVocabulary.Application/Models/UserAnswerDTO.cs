@@ -10,6 +10,8 @@ public class UserAnswerDTO
     public bool IsRight { get; set; }
 
     public DateTimeOffset Date { get; set; } = DateTimeOffset.Now;
+    
+    public string ShortDate => Date.ToString("dd/MM/yyyy HH:mm");
 
     public UserAnswerDTO(Guid id, PhraseUsageDTO phraseUsage, bool isRight)
     {

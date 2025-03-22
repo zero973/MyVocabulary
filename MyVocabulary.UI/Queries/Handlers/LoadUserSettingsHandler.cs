@@ -7,29 +7,22 @@ using MyVocabulary.Application.Queries.Languages;
 
 namespace MyVocabulary.UI.Queries.Handlers;
 
-internal class LoadUserSettingsHandler : IRequestHandler<LoadUserSettingsRequest, Result<UserSettings>>
+internal class LoadUserSettingsHandler(ISender sender) : IRequestHandler<LoadUserSettingsRequest, Result<UserSettings>>
 {
-
-    private readonly ISender _sender;
-
-    public LoadUserSettingsHandler(ISender sender)
-    {
-        _sender = sender;
-    }
-
     public async Task<Result<UserSettings>> Handle(LoadUserSettingsRequest request, CancellationToken cancellationToken)
     {
-        var languages = await _sender.Send(new GetLanguagesRequest());
+        var languages = await sender.Send(new GetLanguagesRequest(), cancellationToken);
 
         var pref = Preferences.Default;
         var appLanguage = new Language(pref.Get(nameof(UserSettings.AppLanguage), "en"));
         var preferredLanguages = pref.Get(nameof(UserSettings.PreferredLanguages), "en")
-            .Split(";", StringSplitOptions.None)
+            .Split(";")
             .Select(x => new Language(x))
             // take only valid languages
             .Where(x => languages.Any(l => l.Equals(x)))
             .ToArray();
+        var countMonthsValidAnswers = pref.Get(nameof(UserSettings.CountMonthsValidAnswers), 1);
 
-        return new UserSettings(appLanguage, preferredLanguages);
+        return new UserSettings(appLanguage, preferredLanguages, (uint)countMonthsValidAnswers);
     }
 }

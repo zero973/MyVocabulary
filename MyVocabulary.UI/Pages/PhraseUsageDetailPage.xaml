@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
              xmlns:controls="clr-namespace:MyVocabulary.UI.Controls"
              xmlns:pageModels="clr-namespace:MyVocabulary.UI.PageModels"
-             xmlns:models="clr-namespace:MyVocabulary.Application.Models;assembly=MyVocabulary.Application"
              x:Class="MyVocabulary.UI.Pages.PhraseUsageDetailPage"
              x:DataType="pageModels:PhraseUsageDetailPageModel"
              Title="{x:Static localization:AppResources.PhraseUsage}">
@@ -33,23 +31,23 @@
             <Label Style="{StaticResource Title3}" HorizontalOptions="Start" Text="Native word" Margin="0,10,0,0"/>
             <Entry Text="{Binding WordUsage.NativePhrase.Value}"
                    HorizontalOptions="Fill"
-                   Placeholder="word..." />
+                   Placeholder="{x:Static localization:AppResources.PlaceholderPhrase}" />
 
             <Label Style="{StaticResource Title3}" HorizontalOptions="Start" Text="Word translation" Margin="0,10,0,0"/>
             <Entry Text="{Binding WordUsage.TranslationPhrase.Value}"
                    HorizontalOptions="Fill"
-                   Placeholder="translation..." />
+                   Placeholder="{x:Static localization:AppResources.PlaceholderTranslation}" />
 
             <Label Style="{StaticResource Title3}" HorizontalOptions="Start" Text="Native sentence" Margin="0,10,0,0"/>
             <Editor Text="{Binding WordUsage.NativeSentence}"
                     HorizontalOptions="Fill"
-                    Placeholder="Native sentence..."
+                    Placeholder="{x:Static localization:AppResources.NativeSentence}"
                     MinimumHeightRequest="60"/>
 
             <Label Style="{StaticResource Title3}" HorizontalOptions="Start" Text="Translated sentence" Margin="0,10,0,0"/>
             <Editor Text="{Binding WordUsage.TranslatedSentence}"
                     HorizontalOptions="Fill"
-                    Placeholder="Translated sentence..."
+                    Placeholder="{x:Static localization:AppResources.TranslatedSentence}"
                     MinimumHeightRequest="60"/>
 
         </VerticalStackLayout>

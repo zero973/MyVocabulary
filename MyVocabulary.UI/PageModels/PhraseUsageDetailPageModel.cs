@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,12 +13,9 @@ using MyVocabulary.UI.NavigationParameters;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObject, IQueryAttributable
+public partial class PhraseUsageDetailPageModel(ISender sender) : ObservableObject, IQueryAttributable
 {
-
-    // todo replace it somewhere
-    private const string NoImageUrl = "https://sun9-58.userapi.com/impg/T2LyUzjz8C3DKtVoI7p6fo2edXNP04AOcYsDZQ/2Pj8k46yrqk.jpg?size=383x341&quality=95&sign=3f0a715c29c549d26b93b073a344df45";
-
+    
     private TopicDTO _topic = null!;
 
     [ObservableProperty]
@@ -32,16 +28,16 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
     private string? _pictureUrl;
 
     [ObservableProperty]
-    public bool _isCreateMode = false;
+    private bool _isCreateMode;
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         var parameters = PhraseUsageNavigationParameter.From(query);
         _topic = parameters.Topic!;
 
-        if (parameters.Mode == NavigationModes.Exists)
+        if (parameters.NavigationType == NavigationTypes.Open)
         {
-            WordUsage = parameters.Value!;
+            WordUsage = parameters.PhraseUsage;
         }
         else
         {
@@ -50,15 +46,9 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
                 _topic, 
                 new PhraseDTO("", _topic.CultureFrom),
                 new PhraseDTO("", _topic.CultureTo), 
-                "", "", NoImageUrl);
+                "", "", "");
         }
         PictureUrl = WordUsage.PhotoUrl;
-    }
-
-    [RelayCommand]
-    private async Task Appearing()
-    {
-        await LoadData();
     }
 
     [RelayCommand]
@@ -81,7 +71,7 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
 
         if (IsCreateMode)
         {
-            var result = await _sender.Send(new AddPhraseUsageRequest(WordUsage));
+            var result = await sender.Send(new AddPhraseUsageRequest(WordUsage));
 
             if (!result.IsSuccess)
             {
@@ -90,14 +80,14 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
                 return;
             }
 
-            await Toast.Make("Phrase usage successfully created", ToastDuration.Short).Show();
+            await Toast.Make("Phrase usage successfully created").Show();
 
             WordUsage.Id = result.Value.Id;
             IsCreateMode = false;
         }
         else
         {
-            var result = await _sender.Send(new EditPhraseUsageRequest(WordUsage));
+            var result = await sender.Send(new EditPhraseUsageRequest(WordUsage));
 
             if (!result.IsSuccess)
             {
@@ -106,7 +96,7 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
                 return;
             }
 
-            await Toast.Make("Phrase usage successfully edited", ToastDuration.Short).Show();
+            await Toast.Make("Phrase usage successfully edited").Show();
         }
     }
 
@@ -125,14 +115,9 @@ public partial class PhraseUsageDetailPageModel(ISender _sender) : ObservableObj
             return;
         }
 
-        await _sender.Send(new DeletePhraseUsageRequest(WordUsage.Id));
-        await Toast.Make("Phrase usage successfully deleted", ToastDuration.Short).Show();
+        await sender.Send(new DeletePhraseUsageRequest(WordUsage.Id));
+        await Toast.Make("Phrase usage successfully deleted").Show();
         await Shell.Current.GoBack();
-    }
-
-    private async Task LoadData()
-    {
-        
     }
 
 }

@@ -4,7 +4,7 @@ using MyVocabulary.Domain.Entities;
 
 namespace MyVocabulary.Application.Specifications;
 
-public class PhraseSpecification : Specification<Phrase>
+public sealed class PhraseSpecification : Specification<Phrase>
 {
 
     public PhraseSpecification(Guid id)

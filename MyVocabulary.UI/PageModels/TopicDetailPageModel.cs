@@ -16,12 +16,9 @@ using MyVocabulary.UI.NavigationParameters;
 
 namespace MyVocabulary.UI.PageModels;
 
-public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, IQueryAttributable
+public partial class TopicDetailPageModel(ISender sender) : ObservableObject, IQueryAttributable
 {
-
-    // todo replace it somewhere
-    private const string NoImageUrl = "https://sun9-58.userapi.com/impg/T2LyUzjz8C3DKtVoI7p6fo2edXNP04AOcYsDZQ/2Pj8k46yrqk.jpg?size=383x341&quality=95&sign=3f0a715c29c549d26b93b073a344df45";
-
+    
     /// <summary>
     /// Languages dictionary
     /// </summary>
@@ -44,22 +41,25 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
     private string? _pictureUrl;
 
     [ObservableProperty]
-    public bool _isCreateMode = false;
+    private bool _isCreateMode = false;
 
     public bool HasWordUsages => (Topic?.PhraseUsages?.Count ?? 0) > 0;
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
+        if (query.Count == 0)
+            return;
+        
         var parameters = PageNavigationParameter<TopicDTO>.From(query);
-        if (parameters.Mode == NavigationModes.Exists)
+        if (parameters.NavigationType == NavigationTypes.Open)
         {
-            Topic = parameters.Value!;
+            Topic = parameters.Value;
         }
         else
         {
             IsCreateMode = true;
             Topic = new TopicDTO(Guid.NewGuid(), Language.Default(), Language.Default(), 
-                "", "", NoImageUrl, new List<PhraseUsageDTO>());
+                "", "", null, new List<PhraseUsageDTO>());
         }
         PictureUrl = Topic.PhotoUrl;
     }
@@ -68,13 +68,6 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
     private async Task Appearing()
     {
         await LoadData();
-    }
-
-    [RelayCommand]
-    private async Task NavigatedTo()
-    {
-        if (!IsCreateMode)
-            Topic = await _sender.Send(new GetTopicRequest(Topic.Id));
     }
 
     [RelayCommand]
@@ -99,7 +92,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
 
         if (IsCreateMode)
         {
-            var result = await _sender.Send(new AddTopicRequest(Topic));
+            var result = await sender.Send(new AddTopicRequest(Topic));
 
             if (!result.IsSuccess)
             {
@@ -108,14 +101,14 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
                 return;
             }
 
-            await Toast.Make("Topic successfully created", ToastDuration.Short).Show();
+            await Toast.Make("Topic successfully created").Show();
 
             Topic.Id = result.Value.Id;
             IsCreateMode = false;
         }
         else
         {
-            var result = await _sender.Send(new EditTopicRequest(Topic));
+            var result = await sender.Send(new EditTopicRequest(Topic));
 
             if (!result.IsSuccess)
             {
@@ -124,7 +117,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
                 return;
             }
 
-            await Toast.Make("Topic successfully edited", ToastDuration.Short).Show();
+            await Toast.Make("Topic successfully edited").Show();
         }
     }
 
@@ -143,8 +136,8 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
             return;
         }
 
-        await _sender.Send(new DeleteTopicRequest(Topic.Id));
-        await Toast.Make("Topic successfully deleted", ToastDuration.Short).Show();
+        await sender.Send(new DeleteTopicRequest(Topic.Id));
+        await Toast.Make("Topic successfully deleted").Show();
         await Shell.Current.GoBack();
     }
 
@@ -157,7 +150,7 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
             return;
         }
 
-        await Toast.Make("Coming soon !", ToastDuration.Short).Show();
+        await Shell.Current.GoToAsync(nameof(Pages.TopicPracticePage), new SimpleNavigationParameter<TopicDTO>(Topic));
     }
 
     [RelayCommand]
@@ -171,19 +164,20 @@ public partial class TopicDetailPageModel(ISender _sender) : ObservableObject, I
         }
 
         await Shell.Current.GoToAsync(nameof(Pages.PhraseUsageDetailPage),
-            new PhraseUsageNavigationParameter(NavigationModes.New, Topic));
+            new PhraseUsageNavigationParameter(NavigationTypes.Create, Topic, 
+                new PhraseUsageDTO(Guid.Empty, null, null, null, "", "", null)));
     }
 
     [RelayCommand]
     private async Task Tap(PhraseUsageDTO phraseUsage)
     {
         await Shell.Current.GoToAsync(nameof(Pages.PhraseUsageDetailPage),
-            new PhraseUsageNavigationParameter(NavigationModes.Exists, Topic, phraseUsage));
+            new PhraseUsageNavigationParameter(NavigationTypes.Open, Topic, phraseUsage));
     }
 
     private async Task LoadData()
     {
-        var languages = await _sender.Send(new GetSortedLanguagesRequest());
+        var languages = await sender.Send(new GetSortedLanguagesRequest());
         _languagesDict = languages.ToDictionary(x => x.Name, x => x);
         Languages = new ObservableCollection<string>(_languagesDict.Keys);
 

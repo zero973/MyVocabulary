@@ -4,7 +4,7 @@ using MyVocabulary.Domain.Entities;
 
 namespace MyVocabulary.Application.Specifications;
 
-public class PhrasesSpecification : Specification<Phrase>
+public sealed class PhrasesSpecification : Specification<Phrase>
 {
 
     public PhrasesSpecification(uint skip, uint take)

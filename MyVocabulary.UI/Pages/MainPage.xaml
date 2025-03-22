@@ -6,22 +6,16 @@
              xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
              xmlns:pageModels="clr-namespace:MyVocabulary.UI.PageModels"
              xmlns:models="clr-namespace:MyVocabulary.Application.Models;assembly=MyVocabulary.Application"
+             xmlns:behaviors="clr-namespace:MyVocabulary.UI.Behaviors"
              x:Class="MyVocabulary.UI.Pages.MainPage"
              x:DataType="pageModels:MainPageModel"
              Title="{x:Static localization:AppResources.Topics}">
 
-    <!-- Doesn't work and I idk why :(
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-            EventName="NavigatedTo"
-            Command="{Binding NavigatedToCommand}" />
-        <toolkit:EventToCommandBehavior
-            EventName="NavigatedFrom"
-            Command="{Binding NavigatedFromCommand}" />
-        <toolkit:EventToCommandBehavior
+        <behaviors:AsyncEventToCommandBehavior
             EventName="Appearing"
             Command="{Binding AppearingCommand}" />
-    </ContentPage.Behaviors>-->
+    </ContentPage.Behaviors>
 
     <ContentPage.Resources>
         <ResourceDictionary>

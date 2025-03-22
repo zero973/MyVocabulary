@@ -1,19 +1,13 @@
+using Microsoft.Extensions.Logging;
 using MyVocabulary.UI.PageModels;
 
 namespace MyVocabulary.UI.Pages;
 
 public partial class MainPage : ContentPage
 {
-
-    private readonly MainPageModel _model;
-
-    public MainPage(MainPageModel model)
+    public MainPage(MainPageModel model, ILogger<MainPage> logger)
 	{
 		InitializeComponent();
-        BindingContext = _model = model;
+        BindingContext = model;
     }
-
-    protected async override void OnAppearing() 
-        => await _model.AppearingCommand.ExecuteAsync(null);
-
 }

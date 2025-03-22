@@ -3,22 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:localization="clr-namespace:MyVocabulary.UI.Localization"
-             xmlns:controls="clr-namespace:MyVocabulary.UI.Controls"
              xmlns:pageModels="clr-namespace:MyVocabulary.UI.PageModels"
              xmlns:models="clr-namespace:MyVocabulary.Application.Models;assembly=MyVocabulary.Application"
+             xmlns:behaviors="clr-namespace:MyVocabulary.UI.Behaviors"
              x:Class="MyVocabulary.UI.Pages.UserAnswersPage"
              x:DataType="pageModels:UserAnswersPageModel"
              Title="{x:Static localization:AppResources.UserAnswers}">
 
     <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior
-            EventName="NavigatedTo"
-            Command="{Binding NavigatedToCommand}" />
-        <toolkit:EventToCommandBehavior
-            EventName="NavigatedFrom"
-            Command="{Binding NavigatedFromCommand}" />
-        <toolkit:EventToCommandBehavior
-            EventName="Appearing"                
+        <behaviors:AsyncEventToCommandBehavior
+            EventName="Appearing"
             Command="{Binding AppearingCommand}" />
     </ContentPage.Behaviors>
 
@@ -28,7 +22,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     
-    <Grid RowDefinitions="8*, 2*">
+    <Grid RowDefinitions="8*, 0.5*">
         
         <Label Grid.Row="0" Style="{StaticResource Title2}" 
             IsVisible="{Binding HasAnswers, Converter={StaticResource InvertedBoolConverter}}" 
@@ -40,13 +34,23 @@
                 <DataTemplate x:DataType="models:UserAnswerDTO">
                     <Grid Padding="0,5">
                         <Border>
-                            <!--<Border.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding TapCommand}" CommandParameter="{Binding .}" />
-                            </Border.GestureRecognizers>-->
-                            <Grid RowDefinitions="*, 5*" ColumnDefinitions="*, 6*">
-                                <controls:EImage Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Source="{Binding WordUsage.PhotoUrl}" ErrorPlaceholder="{StaticResource ImageError}" />
-                                <!--<Label Grid.Row="0" Grid.Column="1" Text="{Binding WordUsage.PhraseUsage}" FontSize="18" FontAttributes="Bold" />
-                                <Label Grid.Row="1" Grid.Column="1" Text="{Binding WordUsage.NativeSentence}" FontSize="14"/>-->
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type pageModels:MainPageModel}}, Path=TapCommand}" 
+                                                      CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Grid RowDefinitions="*, *" ColumnDefinitions="*, *">
+                                <Label Grid.Row="0" Grid.Column="0" 
+                                       Text="{Binding ShortDate}" 
+                                       Style="{StaticResource Body1}" />
+                                <Label Grid.Row="0" Grid.Column="1" 
+                                       Text="{Binding IsRight}" 
+                                       Style="{StaticResource Body1}" />
+                                <Label Grid.Row="1" Grid.Column="0" 
+                                       Text="{Binding PhraseUsage.NativePhrase}" 
+                                       Style="{StaticResource Body1}" />
+                                <Label Grid.Row="1" Grid.Column="1" 
+                                       Text="{Binding PhraseUsage.TranslationPhrase}" 
+                                       Style="{StaticResource Body1}" />
                             </Grid>
                         </Border>
                     </Grid>
@@ -54,7 +58,11 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <Button Grid.Row="1" Text="Load more" IsVisible="{Binding HasAnswers}" Command="{Binding LoadMoreCommand}" />
+        <Button Grid.Row="1"
+                HorizontalOptions="Fill"
+                Margin="45,5"
+                Text="{x:Static localization:AppResources.LoadMore}"
+                Command="{Binding LoadMoreCommand}" />
 
     </Grid>
 </ContentPage>

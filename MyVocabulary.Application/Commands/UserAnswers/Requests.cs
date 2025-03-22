@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ardalis.Result;
+using MediatR;
+using MyVocabulary.Application.Models;
 
 namespace MyVocabulary.Application.Commands.UserAnswers;
-internal class Requests
-{
-}
+
+/// <summary>
+/// Add user answer
+/// </summary>
+public record AddUserAnswerRequest(UserAnswerDTO Entity) : IRequest<Result<UserAnswerDTO>>;
+
+/// <summary>
+/// Add user answers
+/// </summary>
+public record AddUserAnswersRequest(List<UserAnswerDTO> Answers) : IRequest<Result>;

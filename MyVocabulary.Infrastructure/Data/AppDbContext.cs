@@ -3,7 +3,7 @@ using MyVocabulary.Domain.Entities;
 
 namespace MyVocabulary.Infrastructure.Data;
 
-public class AppDbContext : DbContext
+internal class AppDbContext : DbContext
 {
 
     public DbSet<Topic> Topics { get; set; }
@@ -103,28 +103,47 @@ public class AppDbContext : DbContext
 
         var phraseUsages = new List<PhraseUsage>();
         var topic = new Topic(engCulture, ruCulture, "My new topic", "Test topic ...", noImageUrl, phraseUsages);
-        phraseUsages = new List<PhraseUsage>()
-        {
-            new PhraseUsage(topic.Id, joy.Id, joy_ru.Id, "Sentence with joy word", "Предложение с использованием слова радость", noImageUrl),
-            new PhraseUsage(topic.Id, outcome.Id, outcome_ru.Id, "Sentence with outcome word", "Предложение с использованием слова исход", noImageUrl),
-            new PhraseUsage(topic.Id, consequence.Id, consequence_ru.Id, "Sentence with consequence word", "Предложение с использованием слова последствие", noImageUrl),
-            new PhraseUsage(topic.Id, admit.Id, admit_ru.Id, "Sentence with admit word", "Предложение с использованием слова признавать", noImageUrl),
-            new PhraseUsage(topic.Id, prevent.Id, prevent_ru.Id, "Sentence with prevent word", "Предложение с использованием слова предотвращать", noImageUrl),
-            new PhraseUsage(topic.Id, illuminate.Id, illuminate_ru.Id, "Sentence with illuminate word", "Предложение с использованием слова освещать", noImageUrl),
-            new PhraseUsage(topic.Id, investigation.Id, investigation_ru.Id, "Sentence with investigation word", "Предложение с использованием слова расследование", noImageUrl),
-            new PhraseUsage(topic.Id, investigate.Id, investigate_ru.Id, "Sentence with investigate word", "Предложение с использованием слова расследовать", noImageUrl),
-            new PhraseUsage(topic.Id, consider.Id, consider_ru.Id, "Sentence with consider word", "Предложение с использованием слова рассматривать", noImageUrl),
-            new PhraseUsage(topic.Id, promise.Id, promise_ru.Id, "Sentence with promise word", "Предложение с использованием слова обещать", noImageUrl),
-            new PhraseUsage(topic.Id, kidnap.Id, kidnap_ru.Id, "Sentence with kidnap word", "Предложение с использованием слова похищение", noImageUrl),
-            new PhraseUsage(topic.Id, hijacking.Id, hijacking_ru.Id, "Sentence with hijacking word", "Предложение с использованием слова угон", noImageUrl),
-            new PhraseUsage(topic.Id, coincidence.Id, coincidence_ru.Id, "Sentence with coincidence word", "Предложение с использованием слова совпадение", noImageUrl),
-            new PhraseUsage(topic.Id, disaster.Id, disaster_ru.Id, "Sentence with disaster word", "Предложение с использованием слова катастрофа", noImageUrl),
-            new PhraseUsage(topic.Id, suspicious.Id, suspicious_ru.Id, "Sentence with suspicious word", "Предложение с использованием слова подозрительный", noImageUrl),
-            new PhraseUsage(topic.Id, demand.Id, demand_ru.Id, "Sentence with demand word", "Предложение с использованием слова требование", noImageUrl),
-            new PhraseUsage(topic.Id, besides.Id, besides_ru.Id, "Sentence with besides word", "Предложение с использованием слова кроме того", noImageUrl),
-            new PhraseUsage(topic.Id, obtain.Id, obtain_ru.Id, "Sentence with obtain word", "Предложение с использованием слова получать", noImageUrl),
-            new PhraseUsage(topic.Id, envelope.Id, envelope_ru.Id, "Sentence with envelope word", "Предложение с использованием слова конверт", noImageUrl)
-        };
+        phraseUsages =
+        [
+            new PhraseUsage(topic.Id, joy.Id, joy_ru.Id, "Sentence with joy word",
+                "Предложение с использованием слова радость", noImageUrl),
+            new PhraseUsage(topic.Id, outcome.Id, outcome_ru.Id, "Sentence with outcome word",
+                "Предложение с использованием слова исход", noImageUrl),
+            new PhraseUsage(topic.Id, consequence.Id, consequence_ru.Id, "Sentence with consequence word",
+                "Предложение с использованием слова последствие", noImageUrl),
+            new PhraseUsage(topic.Id, admit.Id, admit_ru.Id, "Sentence with admit word",
+                "Предложение с использованием слова признавать", noImageUrl),
+            new PhraseUsage(topic.Id, prevent.Id, prevent_ru.Id, "Sentence with prevent word",
+                "Предложение с использованием слова предотвращать", noImageUrl),
+            new PhraseUsage(topic.Id, illuminate.Id, illuminate_ru.Id, "Sentence with illuminate word",
+                "Предложение с использованием слова освещать", noImageUrl),
+            new PhraseUsage(topic.Id, investigation.Id, investigation_ru.Id, "Sentence with investigation word",
+                "Предложение с использованием слова расследование", noImageUrl),
+            new PhraseUsage(topic.Id, investigate.Id, investigate_ru.Id, "Sentence with investigate word",
+                "Предложение с использованием слова расследовать", noImageUrl),
+            new PhraseUsage(topic.Id, consider.Id, consider_ru.Id, "Sentence with consider word",
+                "Предложение с использованием слова рассматривать", noImageUrl),
+            new PhraseUsage(topic.Id, promise.Id, promise_ru.Id, "Sentence with promise word",
+                "Предложение с использованием слова обещать", noImageUrl),
+            new PhraseUsage(topic.Id, kidnap.Id, kidnap_ru.Id, "Sentence with kidnap word",
+                "Предложение с использованием слова похищение", noImageUrl),
+            new PhraseUsage(topic.Id, hijacking.Id, hijacking_ru.Id, "Sentence with hijacking word",
+                "Предложение с использованием слова угон", noImageUrl),
+            new PhraseUsage(topic.Id, coincidence.Id, coincidence_ru.Id, "Sentence with coincidence word",
+                "Предложение с использованием слова совпадение", noImageUrl),
+            new PhraseUsage(topic.Id, disaster.Id, disaster_ru.Id, "Sentence with disaster word",
+                "Предложение с использованием слова катастрофа", noImageUrl),
+            new PhraseUsage(topic.Id, suspicious.Id, suspicious_ru.Id, "Sentence with suspicious word",
+                "Предложение с использованием слова подозрительный", noImageUrl),
+            new PhraseUsage(topic.Id, demand.Id, demand_ru.Id, "Sentence with demand word",
+                "Предложение с использованием слова требование", noImageUrl),
+            new PhraseUsage(topic.Id, besides.Id, besides_ru.Id, "Sentence with besides word",
+                "Предложение с использованием слова кроме того", noImageUrl),
+            new PhraseUsage(topic.Id, obtain.Id, obtain_ru.Id, "Sentence with obtain word",
+                "Предложение с использованием слова получать", noImageUrl),
+            new PhraseUsage(topic.Id, envelope.Id, envelope_ru.Id, "Sentence with envelope word",
+                "Предложение с использованием слова конверт", noImageUrl)
+        ];
 
         context.Set<Topic>().AddRange(topic);
         context.Set<PhraseUsage>().AddRange(phraseUsages);
